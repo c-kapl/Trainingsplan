@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Trainingsplan">
+<meta name="theme-color" content="#0f0f0f">
+<title>Trainingsplan</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #0f0f0f;
+  --bg2: #181818;
+  --bg3: #222222;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --text: #f0ede8;
+  --text2: #888580;
+  --text3: #555250;
+  --teal: #1D9E75;
+  --teal-light: #E1F5EE;
+  --teal-dim: rgba(29,158,117,0.15);
+  --blue: #185FA5;
+  --blue-light: #E6F1FB;
+  --blue-dim: rgba(24,95,165,0.15);
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --amber-dim: rgba(186,117,23,0.15);
+  --coral: #993C1D;
+  --coral-light: #FAECE7;
+  --coral-dim: rgba(153,60,29,0.15);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --tab-h: 72px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  overflow: hidden;
+}
+
+/* ── Layout ── */
+#app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
+
+.screen {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 0 calc(var(--tab-h) + var(--safe-bottom) + 16px);
+}
+
+/* ── Tab Bar ── */
+.tabbar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: calc(var(--tab-h) + var(--safe-bottom));
+  padding-bottom: var(--safe-bottom);
+  background: rgba(15,15,15,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 0.5px solid var(--border);
+  display: flex;
+  z-index: 100;
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  padding-top: 8px;
+}
+.tab:active { opacity: 0.6; }
+.tab-icon { font-size: 22px; transition: transform 0.2s; }
+.tab.active .tab-icon { transform: scale(1.1); }
+.tab-label { font-size: 10px; font-weight: 500; color: var(--text3); letter-spacing: 0.02em; transition: color 0.2s; }
+.tab.active .tab-label { color: var(--text); }
+
+/* ── Header ── */
+.page-header {
+  padding: 56px 20px 16px;
+  position: sticky; top: 0;
+  background: rgba(15,15,15,0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 10;
+  border-bottom: 0.5px solid var(--border);
+}
+.page-title { font-size: 28px; font-weight: 600; letter-spacing: -0.5px; }
+.page-sub { font-size: 13px; color: var(--text2); margin-top: 2px; }
+
+/* ── Cards ── */
+.card {
+  background: var(--bg2);
+  border-radius: var(--radius);
+  border: 0.5px solid var(--border);
+  padding: 16px;
+  margin: 0 16px 12px;
+}
+.card-title { font-size: 13px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+
+/* ── Phase Cards ── */
+.phase-scroll { display: flex; gap: 10px; padding: 16px 16px 4px; overflow-x: auto; scrollbar-width: none; }
+.phase-scroll::-webkit-scrollbar { display: none; }
+
+.phase-pill {
+  flex-shrink: 0;
+  padding: 10px 18px;
+  border-radius: 30px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text2);
+  background: var(--bg2);
+  white-space: nowrap;
+}
+.phase-pill.active { color: var(--text); border-color: var(--phase-col); background: var(--phase-dim); }
+
+.phase-detail { margin: 8px 16px 0; }
+
+.metrics-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+.metric-box { background: var(--bg3); border-radius: var(--radius-sm); padding: 12px 10px; }
+.metric-label { font-size: 10px; color: var(--text2); margin-bottom: 4px; line-height: 1.3; }
+.metric-val { font-size: 16px; font-weight: 600; font-family: 'DM Mono', monospace; }
+
+/* Week grid */
+.week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 12px; }
+.day-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.day-name { font-size: 9px; color: var(--text3); font-weight: 500; text-transform: uppercase; }
+.day-dot {
+  width: 100%;
+  border-radius: 6px;
+  padding: 6px 2px;
+  text-align: center;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.d-lauf { background: rgba(29,158,117,0.2); color: #5DCAA5; }
+.d-rad { background: rgba(24,95,165,0.2); color: #85B7EB; }
+.d-kraft { background: rgba(186,117,23,0.2); color: #FAC775; }
+.d-regen { background: var(--bg3); color: var(--text3); }
+.d-kombi { background: rgba(153,53,86,0.2); color: #ED93B1; }
+
+/* Focus list */
+.focus-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0;
+  border-bottom: 0.5px solid var(--border);
+  font-size: 13px; color: var(--text2); line-height: 1.5;
+}
+.focus-item:last-child { border-bottom: none; }
+.focus-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+
+/* HR zones */
+.hr-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.hz { border-radius: var(--radius-sm); padding: 10px 4px; text-align: center; }
+.hz-name { font-size: 10px; font-weight: 600; margin-bottom: 2px; }
+.hz-bpm { font-size: 10px; font-family: 'DM Mono', monospace; }
+
+.tip-bar {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: var(--bg3);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.5;
+  border-left: 2px solid var(--phase-col, var(--teal));
+}
+
+/* ── WOCHENLOG ── */
+.week-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px 12px;
+  margin-top: 56px;
+}
+.week-nav { display: flex; align-items: center; gap: 12px; }
+.week-nav button {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 0.5px solid var(--border2);
+  background: var(--bg2);
+  color: var(--text);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.week-nav button:active { background: var(--bg3); }
+.week-label { font-size: 16px; font-weight: 600; }
+
+.log-day {
+  margin: 0 16px 10px;
+  border-radius: var(--radius);
+  border: 0.5px solid var(--border);
+  overflow: hidden;
+}
+.log-day-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--bg2);
+  cursor: pointer;
+}
+.log-day-left { display: flex; align-items: center; gap: 10px; }
+.log-day-name { font-size: 14px; font-weight: 500; }
+.log-day-type { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
+.log-check {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+  color: transparent;
+  flex-shrink: 0;
+}
+.log-check.done { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+.log-body {
+  padding: 12px 14px;
+  background: var(--bg);
+  border-top: 0.5px solid var(--border);
+  display: none;
+}
+.log-body.open { display: block; }
+
+.log-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.log-field label { font-size: 11px; color: var(--text3); display: block; margin-bottom: 4px; }
+.log-field input {
+  width: 100%;
+  background: var(--bg2);
+  border: 0.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  padding: 8px 10px;
+  outline: none;
+}
+.log-field input:focus { border-color: var(--teal); }
+.log-field.full { grid-column: 1 / -1; }
+.log-field textarea {
+  width: 100%;
+  background: var(--bg2);
+  border: 0.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  padding: 8px 10px;
+  outline: none;
+  resize: none;
+  height: 64px;
+  line-height: 1.5;
+}
+.log-field textarea:focus { border-color: var(--teal); }
+
+.rpe-row { display: flex; gap: 6px; margin-top: 4px; }
+.rpe-btn {
+  flex: 1;
+  height: 32px;
+  border-radius: 6px;
+  border: 0.5px solid var(--border2);
+  background: var(--bg2);
+  color: var(--text2);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.rpe-btn.active { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+.save-btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--teal);
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: opacity 0.15s;
+}
+.save-btn:active { opacity: 0.8; }
+
+/* week summary */
+.week-summary {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px; margin: 0 16px 12px;
+}
+.sum-box { background: var(--bg2); border-radius: var(--radius-sm); padding: 12px 10px; border: 0.5px solid var(--border); text-align: center; }
+.sum-val { font-size: 20px; font-weight: 600; font-family: 'DM Mono', monospace; color: var(--teal); }
+.sum-label { font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+/* ── HF RECHNER ── */
+.hf-section { padding: 56px 16px 0; }
+.hf-title { font-size: 28px; font-weight: 600; letter-spacing: -0.5px; margin-bottom: 4px; }
+.hf-sub { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
+
+.hf-input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.hf-field label { font-size: 12px; color: var(--text2); display: block; margin-bottom: 6px; font-weight: 500; }
+.hf-field input, .hf-field select {
+  width: 100%;
+  background: var(--bg2);
+  border: 0.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  padding: 12px 14px;
+  outline: none;
+  -webkit-appearance: none;
+}
+.hf-field input:focus, .hf-field select:focus { border-color: var(--teal); }
+.hf-field.full { grid-column: 1/-1; }
+
+.zones-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.zone-row {
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.zone-left {}
+.zone-name { font-size: 14px; font-weight: 600; }
+.zone-desc { font-size: 12px; margin-top: 1px; opacity: 0.75; }
+.zone-bpm { font-size: 20px; font-weight: 600; font-family: 'DM Mono', monospace; text-align: right; }
+.zone-pct { font-size: 11px; text-align: right; opacity: 0.7; margin-top: 1px; }
+
+.formula-toggle {
+  display: flex; gap: 6px; margin-bottom: 16px;
+}
+.formula-btn {
+  flex: 1; padding: 10px;
+  border-radius: var(--radius-sm);
+  border: 0.5px solid var(--border2);
+  background: var(--bg2);
+  color: var(--text2);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+.formula-btn.active { background: var(--teal-dim); border-color: var(--teal); color: var(--teal); }
+
+.maxhr-display {
+  background: var(--teal-dim);
+  border: 0.5px solid var(--teal);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.maxhr-label { font-size: 13px; color: var(--text2); }
+.maxhr-val { font-size: 28px; font-weight: 700; font-family: 'DM Mono', monospace; color: var(--teal); }
+.maxhr-unit { font-size: 13px; color: var(--text2); }
+
+/* ── Toasts ── */
+.toast {
+  position: fixed; bottom: calc(var(--tab-h) + var(--safe-bottom) + 16px);
+  left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--teal); color: #fff;
+  padding: 10px 20px; border-radius: 30px;
+  font-size: 13px; font-weight: 500;
+  opacity: 0; transition: all 0.3s;
+  z-index: 200; pointer-events: none;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* hidden */
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ═══ TAB: PLAN ═══ -->
+  <div class="screen hidden" id="screen-plan">
+    <div class="page-header">
+      <div class="page-title">Trainingsplan</div>
+      <div class="page-sub">Marathon + Ötztaler · 2 Jahre</div>
+    </div>
+
+    <div class="phase-scroll" id="phasePills"></div>
+    <div class="phase-detail" id="phaseDetail"></div>
+  </div>
+
+  <!-- ═══ TAB: LOG ═══ -->
+  <div class="screen hidden" id="screen-log">
+    <div class="week-header">
+      <div class="week-label" id="weekLabel">Woche 1</div>
+      <div class="week-nav">
+        <button onclick="changeWeek(-1)">‹</button>
+        <button onclick="changeWeek(1)">›</button>
+      </div>
+    </div>
+
+    <div class="week-summary">
+      <div class="sum-box"><div class="sum-val" id="sumKm">0</div><div class="sum-label">km Lauf</div></div>
+      <div class="sum-box"><div class="sum-val" id="sumRad">0</div><div class="sum-label">km Rad</div></div>
+      <div class="sum-box"><div class="sum-val" id="sumDone">0/4</div><div class="sum-label">Einheiten</div></div>
+    </div>
+
+    <div id="logDays"></div>
+  </div>
+
+  <!-- ═══ TAB: HF ═══ -->
+  <div class="screen hidden" id="screen-hf">
+    <div class="hf-section">
+      <div class="hf-title">HF-Zonen</div>
+      <div class="hf-sub">Persönliche Herzfrequenzzonen berechnen</div>
+
+      <div class="formula-toggle">
+        <button class="formula-btn active" onclick="setFormula('fox')">220 − Alter</button>
+        <button class="formula-btn" onclick="setFormula('tanaka')">Tanaka</button>
+        <button class="formula-btn" onclick="setFormula('manual')">Manuell</button>
+      </div>
+
+      <div class="hf-input-row">
+        <div class="hf-field">
+          <label>Alter (Jahre)</label>
+          <input type="number" id="hfAge" value="30" min="10" max="80" oninput="calcZones()">
+        </div>
+        <div class="hf-field">
+          <label>Ruhepuls (bpm)</label>
+          <input type="number" id="hfRest" value="60" min="30" max="100" oninput="calcZones()">
+        </div>
+        <div class="hf-field hidden full" id="manualField">
+          <label>Maximalpuls manuell (bpm)</label>
+          <input type="number" id="hfMax" value="190" min="100" max="220" oninput="calcZones()">
+        </div>
+      </div>
+
+      <div class="maxhr-display">
+        <div>
+          <div class="maxhr-label">Maximale Herzfrequenz</div>
+          <div class="maxhr-label" id="hfFormula" style="font-size:11px;margin-top:2px">220 − 30 = 190</div>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:4px">
+          <div class="maxhr-val" id="hfMaxDisplay">190</div>
+          <div class="maxhr-unit">bpm</div>
+        </div>
+      </div>
+
+      <div class="zones-list" id="zonesList"></div>
+
+      <div class="card" style="margin:0 0 16px">
+        <div class="card-title">Karvonen (HRR-Methode)</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.6">
+          Die Zonen oben nutzen die <strong style="color:var(--text)">Karvonen-Formel</strong>: 
+          Herzfrequenz-Reserve (HFmax − HFruhe) × Intensität% + HFruhe. 
+          Dies berücksichtigt deinen Ruhepuls und ist präziser als reine Prozentwerte der Maximalfrequenz.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Bar -->
+  <div class="tabbar">
+    <div class="tab active" id="tab-plan" onclick="showTab('plan')">
+      <div class="tab-icon">📋</div>
+      <div class="tab-label">Plan</div>
+    </div>
+    <div class="tab" id="tab-log" onclick="showTab('log')">
+      <div class="tab-icon">📓</div>
+      <div class="tab-label">Wochenlog</div>
+    </div>
+    <div class="tab" id="tab-hf" onclick="showTab('hf')">
+      <div class="tab-icon">❤️</div>
+      <div class="tab-label">HF-Zonen</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════
+const phases = [
+  {
+    id: 0, label: "Phase 1", sub: "Fundament", months: "Monat 1–6",
+    col: "#1D9E75", dim: "rgba(29,158,117,0.15)",
+    metrics: [
+      { label: "Laufen / Woche", val: "20–35 km" },
+      { label: "Radfahren / Woche", val: "60–100 km" },
+      { label: "HF-Ziel", val: "Zone 2" },
+    ],
+    week: [
+      { day: "Mo", type: "regen", label: "Ruhe" },
+      { day: "Di", type: "lauf", label: "Lauf" },
+      { day: "Mi", type: "kraft", label: "Kraft" },
+      { day: "Do", type: "regen", label: "Mobil." },
+      { day: "Fr", type: "rad", label: "Rad" },
+      { day: "Sa", type: "kombi", label: "Kombi" },
+      { day: "So", type: "regen", label: "Regen." },
+    ],
+    focus: [
+      { col: "#1D9E75", text: "Laufen: nur Zone 2, Gesprächstempo" },
+      { col: "#1D9E75", text: "Rad: Kadenz 80–90 rpm, flaches Gelände" },
+      { col: "#BA7517", text: "Kraft: Bodyweight – Plank, Glute Bridge, Bird-Dog, Dead Bug" },
+      { col: "#993C1D", text: "Rücken: kein Hohlkreuz, Rumpf bewusst aktivieren" },
+      { col: "#185FA5", text: "Dehnen: täglich 10–15 Min, Hüftbeuger, Hamstrings" },
+    ],
+    hr: [
+      { name: "Z1", bpm: "<120", bg: "rgba(29,158,117,0.12)", col: "#5DCAA5" },
+      { name: "Z2 ★", bpm: "120–142", bg: "rgba(29,158,117,0.3)", col: "#9FE1CB" },
+      { name: "Z3", bpm: "143–157", bg: "rgba(186,117,23,0.2)", col: "#FAC775" },
+      { name: "Z4", bpm: "158–172", bg: "rgba(226,75,74,0.2)", col: "#F09595" },
+      { name: "Z5", bpm: ">172", bg: "rgba(226,75,74,0.4)", col: "#E24B4A" },
+    ],
+    tip: "★ 80–90% in Zone 2. Das ist der Schlüssel zur aeroben Basis."
+  },
+  {
+    id: 1, label: "Phase 2", sub: "Aufbau", months: "Monat 7–12",
+    col: "#185FA5", dim: "rgba(24,95,165,0.15)",
+    metrics: [
+      { label: "Laufen / Woche", val: "35–55 km" },
+      { label: "Radfahren / Woche", val: "100–180 km" },
+      { label: "Trainingstage", val: "4–5 Tage" },
+    ],
+    week: [
+      { day: "Mo", type: "regen", label: "Yoga" },
+      { day: "Di", type: "lauf", label: "Lauf" },
+      { day: "Mi", type: "kraft", label: "Kraft" },
+      { day: "Do", type: "rad", label: "Intervall" },
+      { day: "Fr", type: "regen", label: "Mobil." },
+      { day: "Sa", type: "lauf", label: "Lang-Lauf" },
+      { day: "So", type: "rad", label: "Lange Tour" },
+    ],
+    focus: [
+      { col: "#1D9E75", text: "Laufen: langer Lauf, Progression +10%/Woche" },
+      { col: "#185FA5", text: "Rad: erste Bergeinheiten, Blöcke 3–4h" },
+      { col: "#BA7517", text: "Kraft: ab Monat 9 Kraftraum – Squat, Deadlift, RDL" },
+      { col: "#993C1D", text: "Rücken: Pallof Press, Superman, Reverse Hyper" },
+      { col: "#185FA5", text: "HF-Monitoring: Pulsmessung bei jeder Einheit" },
+    ],
+    hr: [
+      { name: "Z1", bpm: "<120", bg: "rgba(29,158,117,0.12)", col: "#5DCAA5" },
+      { name: "Z2 ★", bpm: "120–142", bg: "rgba(29,158,117,0.3)", col: "#9FE1CB" },
+      { name: "Z3 ↑", bpm: "143–157", bg: "rgba(186,117,23,0.2)", col: "#FAC775" },
+      { name: "Z4", bpm: "158–172", bg: "rgba(226,75,74,0.2)", col: "#F09595" },
+      { name: "Z5", bpm: ">172", bg: "rgba(226,75,74,0.4)", col: "#E24B4A" },
+    ],
+    tip: "Jede 4. Woche = Regenerationswoche (Volumen –30%)."
+  },
+  {
+    id: 2, label: "Phase 3", sub: "Entwicklung", months: "Monat 13–18",
+    col: "#BA7517", dim: "rgba(186,117,23,0.15)",
+    metrics: [
+      { label: "Laufen / Woche", val: "50–70 km" },
+      { label: "Radfahren / Woche", val: "200–300 km" },
+      { label: "Höhenmeter Rad", val: "2.000+/Wo" },
+    ],
+    week: [
+      { day: "Mo", type: "regen", label: "Ruhe" },
+      { day: "Di", type: "lauf", label: "Tempo" },
+      { day: "Mi", type: "kraft", label: "Kraft" },
+      { day: "Do", type: "rad", label: "Hügel" },
+      { day: "Fr", type: "regen", label: "Locker" },
+      { day: "Sa", type: "lauf", label: "Lang-Lauf" },
+      { day: "So", type: "rad", label: "Berg" },
+    ],
+    focus: [
+      { col: "#1D9E75", text: "Laufen: erste Halbmarathon-Wettkämpfe testen" },
+      { col: "#185FA5", text: "Rad: gezielte Bergfahrten, Ötztal-Simulation" },
+      { col: "#BA7517", text: "Kraft: Explosivkraft – Box Jumps, Hip Thrust" },
+      { col: "#993C1D", text: "Ernährung: Kohlenhydratperiodisierung einführen" },
+      { col: "#185FA5", text: "Mental: Pacing-Strategie entwickeln" },
+    ],
+    hr: [
+      { name: "Z1", bpm: "<120", bg: "rgba(29,158,117,0.12)", col: "#5DCAA5" },
+      { name: "Z2", bpm: "120–142", bg: "rgba(29,158,117,0.2)", col: "#9FE1CB" },
+      { name: "Z3 ★", bpm: "143–157", bg: "rgba(186,117,23,0.3)", col: "#FAC775" },
+      { name: "Z4 ↑", bpm: "158–172", bg: "rgba(226,75,74,0.25)", col: "#F09595" },
+      { name: "Z5", bpm: ">172", bg: "rgba(226,75,74,0.4)", col: "#E24B4A" },
+    ],
+    tip: "★ Zone 3–4 wichtiger – aber max. 20% des Gesamtvolumens."
+  },
+  {
+    id: 3, label: "Phase 4", sub: "Peak & Rennen", months: "Monat 19–24",
+    col: "#993C1D", dim: "rgba(153,60,29,0.15)",
+    metrics: [
+      { label: "Marathon-Ziel", val: "Finisher" },
+      { label: "Ötztal", val: "240km 5.5k Hm" },
+      { label: "Tapering", val: "3–4 Wochen" },
+    ],
+    week: [
+      { day: "Mo", type: "regen", label: "Ruhe" },
+      { day: "Di", type: "lauf", label: "Qualität" },
+      { day: "Mi", type: "regen", label: "Locker Rad" },
+      { day: "Do", type: "lauf", label: "Z3 Lauf" },
+      { day: "Fr", type: "regen", label: "Dehnen" },
+      { day: "Sa", type: "rad", label: "Wettkampf-Sim." },
+      { day: "So", type: "regen", label: "Regen." },
+    ],
+    focus: [
+      { col: "#993C1D", text: "Marathon: Tapering 3 Wochen vor Rennen –40%" },
+      { col: "#993C1D", text: "Ötztal: Generalprobe 4 Wochen vor Rennen" },
+      { col: "#BA7517", text: "Kraft: nur Erhaltung 1×/Woche" },
+      { col: "#1D9E75", text: "Schlaf: 8–9h Priorität, HRV-Monitoring" },
+      { col: "#185FA5", text: "Race-Day: Ernährungsplan, Material-Check" },
+    ],
+    hr: [
+      { name: "Z1", bpm: "<120", bg: "rgba(29,158,117,0.12)", col: "#5DCAA5" },
+      { name: "Z2 ★", bpm: "120–142", bg: "rgba(29,158,117,0.3)", col: "#9FE1CB" },
+      { name: "Z3", bpm: "143–157", bg: "rgba(186,117,23,0.2)", col: "#FAC775" },
+      { name: "Z4", bpm: "158–172", bg: "rgba(226,75,74,0.2)", col: "#F09595" },
+      { name: "Z5", bpm: ">172", bg: "rgba(226,75,74,0.4)", col: "#E24B4A" },
+    ],
+    tip: "Wettkampf ist Ernte – jetzt nichts Neues mehr ausprobieren."
+  }
+];
+
+const daySchedule = [
+  { day: "Montag", short: "Mo", type: "regen", label: "Ruhe / Dehnen" },
+  { day: "Dienstag", short: "Di", type: "lauf", label: "Lauf locker" },
+  { day: "Mittwoch", short: "Mi", type: "kraft", label: "Kraft + Rumpf" },
+  { day: "Donnerstag", short: "Do", type: "regen", label: "Mobilität" },
+  { day: "Freitag", short: "Fr", type: "rad", label: "Radfahren" },
+  { day: "Samstag", short: "Sa", type: "kombi", label: "Kombi" },
+  { day: "Sonntag", short: "So", type: "regen", label: "Aktive Regen." },
+];
+
+const typeLabel = { lauf: "Laufen", rad: "Radfahren", kraft: "Kraft/Rumpf", regen: "Regeneration", kombi: "Kombi" };
+const typeColor = {
+  lauf: { bg: "rgba(29,158,117,0.2)", col: "#5DCAA5" },
+  rad: { bg: "rgba(24,95,165,0.2)", col: "#85B7EB" },
+  kraft: { bg: "rgba(186,117,23,0.2)", col: "#FAC775" },
+  regen: { bg: "rgba(255,255,255,0.06)", col: "#888580" },
+  kombi: { bg: "rgba(153,53,86,0.2)", col: "#ED93B1" },
+};
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let currentPhase = 0;
+let currentWeek = 1;
+let currentFormula = 'fox';
+
+function getLogKey(week, dayIdx) { return `log_w${week}_d${dayIdx}`; }
+function loadLog(week, dayIdx) {
+  try { return JSON.parse(localStorage.getItem(getLogKey(week, dayIdx)) || 'null'); } catch(e) { return null; }
+}
+function saveLog(week, dayIdx, data) {
+  localStorage.setItem(getLogKey(week, dayIdx), JSON.stringify(data));
+}
+
+// ═══════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════
+function showTab(tab) {
+  ['plan','log','hf'].forEach(t => {
+    document.getElementById('screen-' + t).classList.add('hidden');
+    document.getElementById('tab-' + t).classList.remove('active');
+  });
+  document.getElementById('screen-' + tab).classList.remove('hidden');
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (tab === 'log') renderLog();
+  if (tab === 'hf') calcZones();
+}
+
+// ═══════════════════════════════════════════
+// PLAN TAB
+// ═══════════════════════════════════════════
+function renderPhasePills() {
+  const el = document.getElementById('phasePills');
+  el.innerHTML = phases.map(p => `
+    <div class="phase-pill ${p.id === currentPhase ? 'active' : ''}"
+      style="--phase-col:${p.col};--phase-dim:${p.dim}"
+      onclick="selectPhase(${p.id})">
+      ${p.label} – ${p.sub}
+    </div>`).join('');
+}
+
+function selectPhase(id) {
+  currentPhase = id;
+  renderPhasePills();
+  renderPhaseDetail();
+}
+
+function renderPhaseDetail() {
+  const p = phases[currentPhase];
+  const el = document.getElementById('phaseDetail');
+  el.style.setProperty('--phase-col', p.col);
+
+  const metricsHtml = p.metrics.map(m => `
+    <div class="metric-box">
+      <div class="metric-label">${m.label}</div>
+      <div class="metric-val" style="color:${p.col}">${m.val}</div>
+    </div>`).join('');
+
+  const weekHtml = p.week.map(d => `
+    <div class="day-col">
+      <div class="day-name">${d.day}</div>
+      <div class="day-dot d-${d.type}">${d.label}</div>
+    </div>`).join('');
+
+  const focusHtml = p.focus.map(f => `
+    <div class="focus-item">
+      <div class="focus-dot" style="background:${f.col}"></div>
+      <div>${f.text}</div>
+    </div>`).join('');
+
+  const hrHtml = p.hr.map(z => `
+    <div class="hz" style="background:${z.bg}">
+      <div class="hz-name" style="color:${z.col}">${z.name}</div>
+      <div class="hz-bpm" style="color:${z.col}">${z.bpm}</div>
+    </div>`).join('');
+
+  el.innerHTML = `
+    <div class="card">
+      <div style="font-size:17px;font-weight:600;color:${p.col};margin-bottom:4px">${p.label} – ${p.sub}</div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:14px">${p.months}</div>
+      <div class="metrics-row">${metricsHtml}</div>
+      <div class="card-title">Wochenstruktur</div>
+      <div class="week-grid">${weekHtml}</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Trainings-Fokus</div>
+      ${focusHtml}
+    </div>
+    <div class="card">
+      <div class="card-title">Herzfrequenzzonen</div>
+      <div class="hr-row">${hrHtml}</div>
+      <div class="tip-bar" style="--phase-col:${p.col}">${p.tip}</div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════
+// LOG TAB
+// ═══════════════════════════════════════════
+function changeWeek(delta) {
+  currentWeek = Math.max(1, currentWeek + delta);
+  renderLog();
+}
+
+function renderLog() {
+  document.getElementById('weekLabel').textContent = `Woche ${currentWeek}`;
+  const container = document.getElementById('logDays');
+  container.innerHTML = '';
+
+  let totalKm = 0, totalRad = 0, totalDone = 0, trainDays = 0;
+
+  daySchedule.forEach((day, idx) => {
+    const log = loadLog(currentWeek, idx) || {};
+    const done = !!log.done;
+    if (done) totalDone++;
+    if (day.type !== 'regen') trainDays++;
+    if (log.km) totalKm += parseFloat(log.km) || 0;
+    if (log.rad) totalRad += parseFloat(log.rad) || 0;
+
+    const tc = typeColor[day.type];
+    const rpeButtons = [1,2,3,4,5,6,7,8,9,10].map(r => `
+      <button class="rpe-btn ${log.rpe == r ? 'active' : ''}" onclick="setRPE(${idx},${r})">${r}</button>`).join('');
+
+    const div = document.createElement('div');
+    div.className = 'log-day';
+    div.id = `logday-${idx}`;
+    div.innerHTML = `
+      <div class="log-day-header" onclick="toggleLogDay(${idx})">
+        <div class="log-day-left">
+          <div class="log-day-name">${day.day}</div>
+          <div class="log-day-type" style="background:${tc.bg};color:${tc.col}">${typeLabel[day.type]}</div>
+        </div>
+        <div class="log-check ${done ? 'done' : ''}" id="check-${idx}" onclick="toggleDone(event,${idx})">✓</div>
+      </div>
+      <div class="log-body ${log.open ? 'open' : ''}" id="logbody-${idx}">
+        <div class="log-fields">
+          ${day.type === 'lauf' || day.type === 'kombi' ? `
+          <div class="log-field">
+            <label>Distanz km (Lauf)</label>
+            <input type="number" id="km-${idx}" value="${log.km||''}" placeholder="0.0" step="0.1" oninput="updateSummary()">
+          </div>` : '<div></div>'}
+          ${day.type === 'rad' || day.type === 'kombi' ? `
+          <div class="log-field">
+            <label>Distanz km (Rad)</label>
+            <input type="number" id="rad-${idx}" value="${log.rad||''}" placeholder="0.0" step="0.1" oninput="updateSummary()">
+          </div>` : '<div></div>'}
+          <div class="log-field">
+            <label>Dauer (min)</label>
+            <input type="number" id="dur-${idx}" value="${log.dur||''}" placeholder="60">
+          </div>
+          <div class="log-field">
+            <label>Ø Puls (bpm)</label>
+            <input type="number" id="hf-${idx}" value="${log.hf||''}" placeholder="140">
+          </div>
+          <div class="log-field full">
+            <label>RPE – Gefühlte Belastung (1=sehr leicht, 10=max)</label>
+            <div class="rpe-row">${rpeButtons}</div>
+          </div>
+          <div class="log-field full">
+            <label>Notizen</label>
+            <textarea id="note-${idx}" placeholder="Wie war die Einheit?">${log.note||''}</textarea>
+          </div>
+        </div>
+        <button class="save-btn" onclick="saveEntry(${idx})">Speichern</button>
+      </div>`;
+    container.appendChild(div);
+  });
+
+  document.getElementById('sumKm').textContent = totalKm.toFixed(1);
+  document.getElementById('sumRad').textContent = totalRad.toFixed(1);
+  document.getElementById('sumDone').textContent = totalDone + '/' + trainDays;
+}
+
+function toggleLogDay(idx) {
+  const body = document.getElementById(`logbody-${idx}`);
+  const isOpen = body.classList.toggle('open');
+  const log = loadLog(currentWeek, idx) || {};
+  log.open = isOpen;
+  saveLog(currentWeek, idx, log);
+}
+
+function toggleDone(e, idx) {
+  e.stopPropagation();
+  const log = loadLog(currentWeek, idx) || {};
+  log.done = !log.done;
+  saveLog(currentWeek, idx, log);
+  const check = document.getElementById(`check-${idx}`);
+  check.classList.toggle('done', log.done);
+  updateSummary();
+  if (log.done) showToast('✓ Einheit abgehakt!');
+}
+
+function setRPE(idx, val) {
+  document.querySelectorAll(`#logbody-${idx} .rpe-btn`).forEach((b,i) => {
+    b.classList.toggle('active', i+1 === val);
+  });
+  const log = loadLog(currentWeek, idx) || {};
+  log.rpe = val;
+  saveLog(currentWeek, idx, log);
+}
+
+function saveEntry(idx) {
+  const log = loadLog(currentWeek, idx) || {};
+  const km = document.getElementById(`km-${idx}`);
+  const rad = document.getElementById(`rad-${idx}`);
+  const dur = document.getElementById(`dur-${idx}`);
+  const hf = document.getElementById(`hf-${idx}`);
+  const note = document.getElementById(`note-${idx}`);
+  if (km) log.km = km.value;
+  if (rad) log.rad = rad.value;
+  if (dur) log.dur = dur.value;
+  if (hf) log.hf = hf.value;
+  if (note) log.note = note.value;
+  saveLog(currentWeek, idx, log);
+  updateSummary();
+  showToast('Gespeichert ✓');
+}
+
+function updateSummary() {
+  let totalKm = 0, totalRad = 0, totalDone = 0, trainDays = 0;
+  daySchedule.forEach((day, idx) => {
+    const log = loadLog(currentWeek, idx) || {};
+    if (log.done) totalDone++;
+    if (day.type !== 'regen') trainDays++;
+    const km = document.getElementById(`km-${idx}`);
+    const rad = document.getElementById(`rad-${idx}`);
+    totalKm += parseFloat(km?.value || log.km || 0);
+    totalRad += parseFloat(rad?.value || log.rad || 0);
+  });
+  document.getElementById('sumKm').textContent = totalKm.toFixed(1);
+  document.getElementById('sumRad').textContent = totalRad.toFixed(1);
+  document.getElementById('sumDone').textContent = totalDone + '/' + trainDays;
+}
+
+// ═══════════════════════════════════════════
+// HF RECHNER
+// ═══════════════════════════════════════════
+const zonesDef = [
+  { name: "Zone 1", desc: "Aktive Erholung", pctLow: 0.50, pctHigh: 0.60, bg: "rgba(29,158,117,0.1)", col: "#5DCAA5" },
+  { name: "Zone 2 ★", desc: "Aerobe Basis", pctLow: 0.60, pctHigh: 0.70, bg: "rgba(29,158,117,0.25)", col: "#9FE1CB" },
+  { name: "Zone 3", desc: "Aerob-anaerob", pctLow: 0.70, pctHigh: 0.80, bg: "rgba(186,117,23,0.2)", col: "#FAC775" },
+  { name: "Zone 4", desc: "Schwellenbereich", pctLow: 0.80, pctHigh: 0.90, bg: "rgba(226,75,74,0.2)", col: "#F09595" },
+  { name: "Zone 5", desc: "Maximale Intensität", pctLow: 0.90, pctHigh: 1.00, bg: "rgba(226,75,74,0.4)", col: "#E24B4A" },
+];
+
+function setFormula(f) {
+  currentFormula = f;
+  document.querySelectorAll('.formula-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['fox','tanaka','manual'][i] === f);
+  });
+  document.getElementById('manualField').classList.toggle('hidden', f !== 'manual');
+  calcZones();
+}
+
+function calcZones() {
+  const age = parseInt(document.getElementById('hfAge').value) || 30;
+  const rest = parseInt(document.getElementById('hfRest').value) || 60;
+  let maxHR;
+  if (currentFormula === 'fox') {
+    maxHR = 220 - age;
+    document.getElementById('hfFormula').textContent = `220 − ${age} = ${maxHR}`;
+  } else if (currentFormula === 'tanaka') {
+    maxHR = Math.round(208 - 0.7 * age);
+    document.getElementById('hfFormula').textContent = `208 − (0.7 × ${age}) = ${maxHR}`;
+  } else {
+    maxHR = parseInt(document.getElementById('hfMax').value) || 190;
+    document.getElementById('hfFormula').textContent = `Manuell eingegeben`;
+  }
+
+  document.getElementById('hfMaxDisplay').textContent = maxHR;
+  const hrr = maxHR - rest;
+
+  const list = document.getElementById('zonesList');
+  list.innerHTML = zonesDef.map(z => {
+    const low = Math.round(z.pctLow * hrr + rest);
+    const high = z.pctHigh >= 1.0 ? maxHR : Math.round(z.pctHigh * hrr + rest);
+    const bpmStr = z.pctHigh >= 1.0 ? `${low}–${maxHR}` : `${low}–${high}`;
+    const pctStr = `${Math.round(z.pctLow*100)}–${Math.round(z.pctHigh*100)}% HRR`;
+    return `
+      <div class="zone-row" style="background:${z.bg}">
+        <div class="zone-left">
+          <div class="zone-name" style="color:${z.col}">${z.name}</div>
+          <div class="zone-desc" style="color:${z.col}">${z.desc}</div>
+        </div>
+        <div>
+          <div class="zone-bpm" style="color:${z.col}">${bpmStr}</div>
+          <div class="zone-pct" style="color:${z.col}">${pctStr}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+renderPhasePills();
+renderPhaseDetail();
+showTab('plan');
+</script>
+</body>
+</html>
