@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>2-Jahres Masterplan · Marathon &amp; Ötztaler</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap');
+:root{--bg:#f7f5f0;--bg2:#ffffff;--bg3:#f0ede6;--border:#e4e1da;--text:#1a1916;--text2:#6a6860;--text3:#9a9890;--shadow:0 1px 3px rgba(0,0,0,.05),0 4px 12px rgba(0,0,0,.04);--teal:#1D9E75;--teal-bg:#dff5ec;--teal-dark:#0a5a44;--blue:#185FA5;--blue-bg:#deedfb;--blue-dark:#0c3d6e;--amber:#BA7517;--amber-bg:#faecd8;--amber-dark:#7a4609;--coral:#993C1D;--coral-bg:#fae8e0;--coral-dark:#6b2a12;--r:14px;--rs:8px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh}
+/* HEADER */
+.hdr{position:sticky;top:0;z-index:200;background:rgba(247,245,240,.95);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:13px 20px 11px}
+.hdr-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:34px;height:34px;border-radius:9px;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.logo-name{font-family:'DM Serif Display',serif;font-size:17px;line-height:1.2}
+.logo-sub{font-size:11px;color:var(--text3)}
+.nav-wrap{display:flex;background:var(--bg3);border-radius:28px;padding:3px;gap:2px;border:1px solid var(--border)}
+.npill{font-size:12px;font-weight:500;padding:6px 16px;border-radius:24px;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.npill:hover{color:var(--text)}
+.npill.active{background:var(--bg2);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+/* PANELS */
+.panel{display:none;max-width:900px;margin:0 auto;padding:20px 16px 60px}
+.panel.active{display:block}
+/* TRAINING */
+.phase-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.ppill{padding:7px 16px;border-radius:30px;border:1px solid var(--border);background:var(--bg2);font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .18s;white-space:nowrap;box-shadow:var(--shadow)}
+.ppill:hover{border-color:#b0aea6;color:var(--text)}
+.ppill.active{color:#fff;border-color:transparent}
+.day-tabs{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;margin-bottom:16px}
+.day-tabs::-webkit-scrollbar{display:none}
+.dtab{flex-shrink:0;padding:6px 13px;border-radius:28px;border:1px solid var(--border);background:var(--bg2);font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .15s}
+.dtab:hover{border-color:#b0aea6}
+.dtab.active{color:#fff;border-color:transparent}
+.dtab.t-lauf.active{background:var(--teal)}
+.dtab.t-rad.active{background:var(--blue)}
+.dtab.t-kraft.active{background:var(--amber)}
+.dtab.t-regen.active{background:#7a7870}
+.dtab.t-kombi.active{background:#8a3560}
+.card{background:var(--bg2);border-radius:var(--r);border:.5px solid var(--border);padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+.day-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.day-badge{font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px}
+.day-title{font-family:'DM Serif Display',serif;font-size:19px;margin-bottom:4px}
+.day-dur{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
+.section{margin-bottom:16px}
+.section-title{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;padding-bottom:6px;border-bottom:.5px solid var(--border)}
+.ex-list{display:flex;flex-direction:column;gap:6px}
+.ex{display:flex;align-items:flex-start;background:var(--bg3);border-radius:var(--rs);padding:10px 12px;gap:10px;transition:transform .15s}
+.ex:hover{transform:translateX(2px)}
+.ex-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.ex-body{flex:1;min-width:0}
+.ex-name{font-size:13px;font-weight:500}
+.ex-detail{font-size:12px;color:var(--text2);margin-top:2px;line-height:1.4}
+.ex-badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;flex-shrink:0;align-self:flex-start;font-family:'DM Mono',monospace;white-space:nowrap}
+.info-box{background:var(--bg3);border-radius:var(--rs);padding:10px 13px;font-size:12px;color:var(--text2);line-height:1.55;border-left:2px solid var(--accent,#ccc);margin-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chip{background:var(--bg3);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:500;color:var(--text2)}
+.chip span{font-family:'DM Mono',monospace;color:var(--text);font-weight:600}
+/* NUTRITION */
+.stats-banner{display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg2);border-radius:var(--r);border:.5px solid var(--border);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow)}
+@media(max-width:540px){.stats-banner{grid-template-columns:repeat(2,1fr)}}
+.stat{padding:13px 14px;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+@media(max-width:540px){.stat:nth-child(2){border-right:none}.stat:nth-child(3){border-top:1px solid var(--border)}.stat:nth-child(4){border-top:1px solid var(--border);border-right:none}}
+.stat-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+.stat-val{font-size:20px;font-weight:600;line-height:1}
+.stat-sub{font-size:10px;color:var(--text3);margin-top:3px}
+.macro-card{background:var(--bg2);border-radius:var(--r);border:.5px solid var(--border);padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+.macro-title{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+.mrow{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.mrow:last-child{margin-bottom:0}
+.mlabel{font-size:11px;font-weight:500;color:var(--text2);width:130px;flex-shrink:0}
+.mtrack{flex:1;height:7px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.mfill{height:100%;border-radius:4px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.mpct{font-size:11px;color:var(--text3);width:32px;text-align:right;font-family:'DM Mono',monospace}
+.meal-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.mtab{font-size:12px;font-weight:500;padding:6px 14px;border-radius:28px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.mtab:hover{border-color:#b0aea6}
+.mtab.active{background:var(--text);color:#fff;border-color:transparent}
+.recipe-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:520px){.recipe-grid{grid-template-columns:1fr}}
+.rcard{background:var(--bg3);border-radius:var(--rs);padding:12px 14px;border-left:3px solid;transition:transform .15s}
+.rcard:hover{transform:translateY(-1px)}
+.rcard-name{font-size:13px;font-weight:600;margin-bottom:4px}
+.rcard-desc{font-size:12px;color:var(--text2);line-height:1.45;margin-bottom:6px}
+.rcard-kcal{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:7px}
+.rtags{display:flex;flex-wrap:wrap;gap:3px}
+.rtag{font-size:10px;padding:2px 7px;border-radius:7px;font-weight:600}
+.rt-o{background:#deedfb;color:#0c3d6e}
+.rt-b{background:#dff5ec;color:#0a5a44}
+.rt-p{background:#faecd8;color:#7a4609}
+.rt-c{background:#fae8e0;color:#6b2a12}
+.rt-pre{background:#eeedfe;color:#3C3489}
+.rt-post{background:#fce8f4;color:#6B1F52}
+.omega-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+@media(max-width:400px){.omega-grid{grid-template-columns:1fr}}
+.oitem{display:flex;gap:9px;align-items:flex-start}
+.odot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.otext{font-size:12px;color:var(--text2);line-height:1.45}
+.otext strong{color:var(--text);font-weight:600;display:block;margin-bottom:1px}
+.tip-box{font-size:12px;color:var(--text2);padding:11px 13px;background:var(--bg3);border-radius:var(--rs);line-height:1.6;border-left:2px solid}
+footer{text-align:center;padding:24px 16px;font-size:11px;color:var(--text3);border-top:1px solid var(--border);margin-top:32px;letter-spacing:.02em}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="logo">
+      <div class="logo-icon">&#127956;</div>
+      <div>
+        <div class="logo-name">2-Jahres Masterplan</div>
+        <div class="logo-sub">Marathon &middot; Otztaler &middot; 76 kg &middot; 180 cm &middot; 30 J</div>
+      </div>
+    </div>
+    <div class="nav-wrap">
+      <button class="npill active" onclick="switchPanel('training')">&#127939; Training</button>
+      <button class="npill" onclick="switchPanel('ern')">&#129367; Ernahrung</button>
+    </div>
+  </div>
+</header>
+
+<section class="panel active" id="panel-training">
+  <div class="phase-row" id="tPhaseRow"></div>
+  <div class="day-tabs" id="tDayTabs"></div>
+  <div id="tDayContent"></div>
+</section>
+
+<section class="panel" id="panel-ern">
+  <div class="phase-row" id="ePhaseRow"></div>
+  <div class="stats-banner" id="eStats"></div>
+  <div class="macro-card">
+    <div class="macro-title">Makronahrstoff-Verteilung</div>
+    <div id="eMacros"></div>
+  </div>
+  <div class="card">
+    <div class="card-label">Mahlzeiten &amp; Rezepte</div>
+    <div class="meal-tabs" id="eMealTabs"></div>
+    <div class="recipe-grid" id="eRecipes"></div>
+  </div>
+  <div class="card">
+    <div class="card-label">Omega-3 &amp; Ballaststoff-Quellen</div>
+    <div class="omega-grid" id="eOmega"></div>
+    <div class="tip-box" id="eTip"></div>
+  </div>
+</section>
+
+<footer>2-Jahres Masterplan &middot; Marathon &amp; Otztaler Radmarathon &middot; 76 kg &middot; 180 cm</footer>
+<script>
+const phases = [
+  // ══════════════════════════════════════════════
+  // PHASE 1 – FUNDAMENT (Monat 1–6)
+  // ══════════════════════════════════════════════
+  {
+    id: 0, label: "Phase 1", sub: "Fundament", months: "Monat 1–6", col: "#1D9E75",
+    chips: [
+      {l:"Laufen / Wo", v:"20–35 km"},
+      {l:"Rad / Wo", v:"60–100 km"},
+      {l:"Kraft", v:"Bodyweight"},
+      {l:"HF-Ziel", v:"Zone 2"},
+    ],
+    days: [
+      {
+        name:"Montag", short:"Mo", type:"regen",
+        title:"Aktive Erholung & Dehnung",
+        duration:"30–45 Min",
+        badge:{bg:"#f0ede6", col:"#6a6860", label:"Regeneration"},
+        sections:[
+          {
+            title:"Morgen-Mobilität (täglich empfohlen)",
+            exercises:[
+              {icon:"🔄", name:"Hüftkreise", detail:"Je 10× vor und rückwärts, stehend", badge:"2 × 10", bg:"#f0ede6", bc:"#9a9890"},
+              {icon:"🦵", name:"Hüftbeuger-Dehnung (Couch Stretch)", detail:"Knie auf Boden, Oberkörper aufrecht – 45 Sek. pro Seite", badge:"2 × 45s", bg:"#f0ede6", bc:"#9a9890"},
+              {icon:"🔁", name:"Cat-Cow (Wirbelsäulen-Mobilisation)", detail:"Langsam, mit Atemrhythmus – wichtig für Rückengesundheit", badge:"2 × 10", bg:"#f0ede6", bc:"#9a9890"},
+              {icon:"🧘", name:"Pigeon Pose (Hüftöffner)", detail:"Pro Seite 60 Sek. halten, tief atmen", badge:"2 × 60s", bg:"#f0ede6", bc:"#9a9890"},
+              {icon:"🦶", name:"Waden-Dehnung an der Wand", detail:"Gerade Knie + leicht gebeugt – je 30 Sek.", badge:"2 × 30s", bg:"#f0ede6", bc:"#9a9890"},
+              {icon:"💪", name:"Thoraxrotation (liegend)", detail:"Seitenlage, oberen Arm zur anderen Seite – BWS mobilisieren", badge:"2 × 8", bg:"#f0ede6", bc:"#9a9890"},
+            ]
+          }
+        ],
+        info:{col:"#9a9890", text:"Dieser Tag ist bewusst leer von Belastung. Dehnung & Mobilisation sind kein 'Bonus' – sie sind Training. Rückenprobleme entstehen oft durch Verkürzungen von Hüftbeuger und BWS-Steifigkeit."}
+      },
+      {
+        name:"Dienstag", short:"Di", type:"lauf",
+        title:"Lockerer Grundlagen-Lauf",
+        duration:"35–55 Min",
+        badge:{bg:"#dff5ec", col:"#0a5a44", label:"Laufen"},
+        sections:[
+          {
+            title:"Aufwärmen (5 Min)",
+            exercises:[
+              {icon:"🚶", name:"Flott gehen", detail:"5 Min zügiges Gehen – Herzfrequenz sanft anheben", badge:"5 Min", bg:"#dff5ec", bc:"#1D9E75"},
+              {icon:"🦵", name:"Lauf-ABC (Kniehebelauf, Anfersen)", detail:"Je 2 × 20 m – Laufökonomie trainieren", badge:"2 × 20m", bg:"#dff5ec", bc:"#1D9E75"},
+            ]
+          },
+          {
+            title:"Hauptteil – Zone 2 Lauf",
+            exercises:[
+              {icon:"🏃", name:"Monat 1–2: Lauf 25–30 Min", detail:"Tempo: du kannst dich vollständig unterhalten. HF: 120–142 bpm. Pace ca. 6:30–7:30 / km", badge:"25–30 Min", bg:"#dff5ec", bc:"#1D9E75"},
+              {icon:"🏃", name:"Monat 3–4: Lauf 35–40 Min", detail:"Gleiches Tempo, längere Dauer. Distanz ca. 5–6 km. HF konsequent unter 142 bpm", badge:"35–40 Min", bg:"#dff5ec", bc:"#1D9E75"},
+              {icon:"🏃", name:"Monat 5–6: Lauf 45–50 Min", detail:"Distanz ca. 7–8 km. Wenn HF stabil bleibt, Pace minimal steigern auf ~6:00 / km", badge:"45–50 Min", bg:"#dff5ec", bc:"#1D9E75"},
+            ]
+          },
+          {
+            title:"Auslaufen & Dehnen (5 Min)",
+            exercises:[
+              {icon:"🚶", name:"Auslaufen gehen", detail:"3 Min langsames Gehen, Puls senken", badge:"3 Min", bg:"#dff5ec", bc:"#1D9E75"},
+              {icon:"🧘", name:"Stehende Quadrizeps-Dehnung", detail:"Je 30 Sek. pro Seite", badge:"2 × 30s", bg:"#dff5ec", bc:"#1D9E75"},
+            ]
+          }
+        ],
+        info:{col:"#1D9E75", text:"Zone 2 fühlt sich zu langsam an – das ist normal und richtig. Wenn HF über 145 steigt: laufen/gehen kombinieren. Kein Ego-Training in Phase 1."}
+      },
+      {
+        name:"Mittwoch", short:"Mi", type:"kraft",
+        title:"Kraft & Rumpf (Bodyweight + Bänder)",
+        duration:"45–55 Min",
+        badge:{bg:"#faecd8", col:"#7a4609", label:"Kraft / Rumpf"},
+        sections:[
+          {
+            title:"Aktivierung (8 Min)",
+            exercises:[
+              {icon:"🔥", name:"Glute Bridge", detail:"Hüfte hoch drücken, Gesäß oben anspannen – 2 Sek. halten. Rücken flach!", badge:"3 × 15", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🔥", name:"Clamshell mit Widerstandsband", detail:"Seitenlage, Band über Knien, oberes Knie öffnen – Gluteus medius aktivieren", badge:"3 × 15", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🔥", name:"Dead Bug", detail:"Rücken flach, Lendenwirbel am Boden, abwechselnd Arm+Bein strecken. LANGSAM.", badge:"3 × 8", bg:"#faecd8", bc:"#BA7517"},
+            ]
+          },
+          {
+            title:"Kraft-Hauptteil",
+            exercises:[
+              {icon:"💪", name:"Bodyweight Squat", detail:"Füße schulterbreit, Knie über Zehen, Rücken gerade. Monat 1–2: langsam + kontrolliert", badge:"3 × 12", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"💪", name:"Reverse Lunge (rückwärts Ausfallschritt)", detail:"Rumpf stabil, Knie berührt nicht den Boden. Schonender für Knie als vorwärts", badge:"3 × 10", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"💪", name:"Push-Up (knie- oder zehen-gestützt)", detail:"Körper als Brett, Ellbogen 45° zum Körper. Rumpf aktiv halten", badge:"3 × 8–12", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"💪", name:"Band-Row (sitzend mit Band)", detail:"Band um Füße, aufrecht sitzen, Schulterblätter zusammenziehen – Gegenmuskeln zum Radfahren", badge:"3 × 12", bg:"#faecd8", bc:"#BA7517"},
+            ]
+          },
+          {
+            title:"Rumpf-Block (Rücken-Fokus)",
+            exercises:[
+              {icon:"🧱", name:"Plank (Unterarmstütz)", detail:"Körper gerade wie ein Brett. Becken nicht heben oder absenken. Atmen!", badge:"3 × 30s", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🧱", name:"Bird-Dog", detail:"Vierfüßler, gegenüberliegendes Arm+Bein strecken – 3 Sek. halten. Hüfte stabil.", badge:"3 × 8", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🧱", name:"Superman (Rückenstrecker)", detail:"Bauchlage, Arme und Beine gleichzeitig heben – tief im unteren Rücken spüren", badge:"3 × 10", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🧱", name:"Side Plank", detail:"Seitlicher Unterarmstütz, Hüfte hebt. Monat 1–2: Knie abgestützt ok", badge:"3 × 20s", bg:"#faecd8", bc:"#BA7517"},
+            ]
+          }
+        ],
+        info:{col:"#BA7517", text:"Ab Monat 4: Widerstandsband beim Squat und Lunge einsetzen. Ab Monat 7 (Kraftraum): Goblet Squat, Romanian Deadlift und Barbell-Arbeit einführen."}
+      },
+      {
+        name:"Donnerstag", short:"Do", type:"regen",
+        title:"Aktive Regeneration / Mobilität",
+        duration:"20–30 Min",
+        badge:{bg:"#f0ede6", col:"#6a6860", label:"Regeneration"},
+        sections:[
+          {
+            title:"Optionale leichte Aktivität",
+            exercises:[
+              {icon:"🚶", name:"Spaziergang", detail:"15–20 Min lockeres Gehen – fördert Durchblutung ohne neue Belastung", badge:"20 Min", bg:"#f0ede6", bc:"#9a9890"},
+              {icon:"🧘", name:"Foam Rolling (falls vorhanden)", detail:"Waden, IT-Band, Brustwirbelsäule – je 60 Sek. pro Zone", badge:"10 Min", bg:"#f0ede6", bc:"#9a9890"},
+            ]
+          }
+        ],
+        info:{col:"#9a9890", text:"Donnerstag bleibt leicht. Wenn du müde bist: komplett ruhen. Regeneration ist Training."}
+      },
+      {
+        name:"Freitag", short:"Fr", type:"rad",
+        title:"Grundlagen-Radausfahrt",
+        duration:"60–120 Min",
+        badge:{bg:"#deedfb", col:"#154e8a", label:"Radfahren"},
+        sections:[
+          {
+            title:"Einfahren (10 Min)",
+            exercises:[
+              {icon:"🚴", name:"Einfahren sehr locker", detail:"Flaches Gelände, ganz lockers Treten – Muskeln aufwärmen, HF unter 120 bpm", badge:"10 Min", bg:"#deedfb", bc:"#185FA5"},
+            ]
+          },
+          {
+            title:"Hauptteil – Zone 2 Ausdauer",
+            exercises:[
+              {icon:"🚴", name:"Monat 1–2: 50–60 Min Ausfahrt", detail:"Flach, Zone 2 (120–142 bpm), Kadenz 80–90 rpm. Pace ca. 20–22 km/h. Distanz: ~20–25 km", badge:"50–60 Min", bg:"#deedfb", bc:"#185FA5"},
+              {icon:"🚴", name:"Monat 3–4: 75–90 Min Ausfahrt", detail:"Erste leichte Hügel ok. HF darf bei Anstiegen kurz auf 150 – danach wieder Zone 2. Distanz: ~30–40 km", badge:"75–90 Min", bg:"#deedfb", bc:"#185FA5"},
+              {icon:"🚴", name:"Monat 5–6: 90–120 Min Ausfahrt", detail:"Kadenz-Fokus: 85–95 rpm bewusst halten. Distanz: ~40–50 km. Schnitt 22–24 km/h anstreben", badge:"90–120 Min", bg:"#deedfb", bc:"#185FA5"},
+            ]
+          },
+          {
+            title:"Ausfahren & Kadenz-Drill",
+            exercises:[
+              {icon:"🔁", name:"Kadenz-Intervalle (Monat 3+)", detail:"3 × 2 Min bei 95–100 rpm im leichten Gang – Trittrundheit trainieren", badge:"3 × 2 Min", bg:"#deedfb", bc:"#185FA5"},
+              {icon:"🚴", name:"Ausfahren", detail:"10 Min sehr locker, ganz lockeres Treten", badge:"10 Min", bg:"#deedfb", bc:"#185FA5"},
+            ]
+          }
+        ],
+        info:{col:"#185FA5", text:"Kadenz ist wichtiger als Geschwindigkeit. 80–90 rpm schont die Knie und schult das neuromuskuläre System für den Ötztaler (5.500 Hm bedeuten stundenlanges Treten)."}
+      },
+      {
+        name:"Samstag", short:"Sa", type:"kombi",
+        title:"Kombi: Lauf + Rumpf",
+        duration:"60–75 Min",
+        badge:{bg:"#fbe8f0", col:"#8a2e52", label:"Kombi"},
+        sections:[
+          {
+            title:"Lauf-Teil (40–50 Min)",
+            exercises:[
+              {icon:"🏃", name:"Monat 1–2: 30–35 Min Zone 2", detail:"Wie Dienstag – zweiter lockerer Lauf der Woche. Distanz: 4–5 km", badge:"30–35 Min", bg:"#fbe8f0", bc:"#8a2e52"},
+              {icon:"🏃", name:"Monat 3–4: 40–45 Min Zone 2", detail:"Distanz: 6–7 km. Pace stabil halten, HF-Monitoring", badge:"40–45 Min", bg:"#fbe8f0", bc:"#8a2e52"},
+              {icon:"🏃", name:"Monat 5–6: 45–50 Min Zone 2", detail:"Distanz: 7–8 km. Gel/Riegel ab 40 Min testen – Magentraining beginnen", badge:"45–50 Min", bg:"#fbe8f0", bc:"#8a2e52"},
+            ]
+          },
+          {
+            title:"Rumpf-Finish (15–20 Min direkt nach Lauf)",
+            exercises:[
+              {icon:"🧱", name:"Glute Bridge mit Band", detail:"Band über Knie, 2 Sek. oben halten – Ermüdungstoleranz trainieren", badge:"3 × 15", bg:"#fbe8f0", bc:"#8a2e52"},
+              {icon:"🧱", name:"Plank-Variante", detail:"Wechsel: Unterarm-Plank → Seitstütz → Unterarm-Plank. Kein Innehalten.", badge:"3 Runden", bg:"#fbe8f0", bc:"#8a2e52"},
+              {icon:"🧱", name:"Bird-Dog mit Pause", detail:"3 Sek. halten, kontrolliert zurück. Nach dem Lauf schwerer – genau richtig.", badge:"3 × 8", bg:"#fbe8f0", bc:"#8a2e52"},
+            ]
+          }
+        ],
+        info:{col:"#8a2e52", text:"Rumpfübungen nach dem Lauf zu machen simuliert Wettkampfermüdung und baut Rumpfstabilität unter Belastung auf – genau das, was du im Marathon-Endspurt brauchst."}
+      },
+      {
+        name:"Sonntag", short:"So", type:"regen",
+        title:"Komplett-Ruhetag",
+        duration:"—",
+        badge:{bg:"#f0ede6", col:"#6a6860", label:"Regeneration"},
+        sections:[
+          {
+            title:"Was heute zählt",
+            exercises:[
+              {icon:"😴", name:"Schlafen (8–9 Stunden)", detail:"Wichtigste Regenerationsmaßnahme. Muskelaufbau findet im Schlaf statt.", badge:"Priorität 1", bg:"#f0ede6", bc:"#9a9890"},
+              {icon:"🍽️", name:"Essen & Trinken", detail:"Kohlenhydrate & Protein nach Training vom Samstag nachfüllen. 2–3 L Wasser.", badge:"Priorität 2", bg:"#f0ede6", bc:"#9a9890"},
+              {icon:"🦶", name:"Optionales Dehnen", detail:"Nur wenn du Lust hast – nie mit Schmerzen", badge:"Optional", bg:"#f0ede6", bc:"#9a9890"},
+            ]
+          }
+        ],
+        info:{col:"#9a9890", text:"Kein Training. Kein schlechtes Gewissen. Sonntag ist genauso wichtig wie der härteste Trainingstag."}
+      },
+    ]
+  },
+
+  // ══════════════════════════════════════════════
+  // PHASE 2 – AUFBAU (Monat 7–12)
+  // ══════════════════════════════════════════════
+  {
+    id:1, label:"Phase 2", sub:"Aufbau", months:"Monat 7–12", col:"#185FA5",
+    chips:[
+      {l:"Laufen / Wo", v:"35–55 km"},
+      {l:"Rad / Wo", v:"100–180 km"},
+      {l:"Kraft", v:"Kraftraum ab M9"},
+      {l:"HF-Ziel", v:"Z2 + Z3-Einschübe"},
+    ],
+    days:[
+      {
+        name:"Montag", short:"Mo", type:"regen",
+        title:"Yoga / Mobilität",
+        duration:"30–45 Min",
+        badge:{bg:"#f0ede6", col:"#6a6860", label:"Regeneration"},
+        sections:[{
+          title:"Yoga-Sequenz für Ausdauersportler",
+          exercises:[
+            {icon:"🧘", name:"Sonnengruß A (3×)", detail:"Langsam, Atemrhythmus. Wärmt gesamten Körper auf.", badge:"3 Runden", bg:"#f0ede6", bc:"#9a9890"},
+            {icon:"🧘", name:"Lizard Pose (Eidechse)", detail:"Tiefer Ausfallschritt, Hände innen – intensive Hüftbeuger-Dehnung. 60 Sek./Seite", badge:"2 × 60s", bg:"#f0ede6", bc:"#9a9890"},
+            {icon:"🧘", name:"Pigeon Pose", detail:"60–90 Sek. pro Seite. Hier liegt oft das Problem bei Rückenschmerzen.", badge:"2 × 90s", bg:"#f0ede6", bc:"#9a9890"},
+            {icon:"🔄", name:"Thoraxrotation (sitzend)", detail:"Überkreuz-Rotation, Arme ausgestreckt – BWS mobilisieren", badge:"2 × 10", bg:"#f0ede6", bc:"#9a9890"},
+          ]
+        }],
+        info:{col:"#9a9890", text:"Ab Phase 2 steigt Volumen stark an. Montag als Mobilitätstag ist nicht verhandelbar."}
+      },
+      {
+        name:"Dienstag", short:"Di", type:"lauf",
+        title:"Lockerer Lauf + optionale Strides",
+        duration:"50–65 Min",
+        badge:{bg:"#dff5ec", col:"#0a5a44", label:"Laufen"},
+        sections:[
+          {
+            title:"Aufwärmen",
+            exercises:[
+              {icon:"🚶", name:"Gehen → Einlaufen", detail:"5 Min gehen, dann 5 Min sehr locker laufen", badge:"10 Min", bg:"#dff5ec", bc:"#1D9E75"},
+            ]
+          },
+          {
+            title:"Hauptteil",
+            exercises:[
+              {icon:"🏃", name:"Monat 7–8: 40–45 Min Zone 2", detail:"Pace ca. 6:00–7:00 / km. Distanz: 7–9 km. HF konsequent 120–142 bpm", badge:"40–45 Min", bg:"#dff5ec", bc:"#1D9E75"},
+              {icon:"🏃", name:"Monat 9–10: 45–50 Min Zone 2", detail:"Distanz: 8–10 km. Laufen beginnt sich natürlicher anzufühlen.", badge:"45–50 Min", bg:"#dff5ec", bc:"#1D9E75"},
+              {icon:"🏃", name:"Monat 11–12: 50–55 Min Zone 2", detail:"Distanz: 9–11 km. Pace nähert sich 5:30–6:00 / km bei gleichem HF-Niveau.", badge:"50–55 Min", bg:"#dff5ec", bc:"#1D9E75"},
+            ]
+          },
+          {
+            title:"Strides (ab Monat 9 optional)",
+            exercises:[
+              {icon:"⚡", name:"4–6 × Strides (100 m)", detail:"Locker beschleunigen auf ~85% – nicht sprinten. 90 Sek. Pause. Beine 'wachrütteln'.", badge:"4–6 × 100m", bg:"#dff5ec", bc:"#1D9E75"},
+            ]
+          }
+        ],
+        info:{col:"#1D9E75", text:"Strides trainieren Laufökonomie ohne Ermüdung. In Zone 2 zu bleiben wird jetzt einfacher – das aerobe System adaptiert."}
+      },
+      {
+        name:"Mittwoch", short:"Mi", type:"kraft",
+        title:"Krafttraining (Monat 7–8: Matte / ab Monat 9: Kraftraum)",
+        duration:"55–65 Min",
+        badge:{bg:"#faecd8", col:"#7a4609", label:"Kraft / Rumpf"},
+        sections:[
+          {
+            title:"Monat 7–8: Fortgeschrittenes Bodyweight",
+            exercises:[
+              {icon:"💪", name:"Bulgarian Split Squat (mit Band)", detail:"Hinteres Bein auf Stuhl/Sofa. Rumpf gerade, Knie über Fuß. Fordernder als normaler Lunge", badge:"3 × 10", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"💪", name:"Single-Leg Glute Bridge", detail:"Ein Bein gestreckt, Hüfte hoch – deutlich schwerer. Rücken bleibt flach.", badge:"3 × 12", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"💪", name:"Push-Up Varianten", detail:"Enge Arme, weite Arme, langsam runter (4 Sek.). Körperspannung!", badge:"4 × 10", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🧱", name:"Copenhagen Plank (mit Stuhl)", detail:"Seitlicher Stütz, oberes Bein auf Stuhl. Intensivster Adduktoren-Schutz für Läufer", badge:"3 × 20s", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🧱", name:"Pallof Press mit Band", detail:"Band auf Höhe Bauch, Arme strecken und halten – Anti-Rotation, perfekt für Rücken", badge:"3 × 10", bg:"#faecd8", bc:"#BA7517"},
+            ]
+          },
+          {
+            title:"Ab Monat 9: Kraftraum-Einheiten",
+            exercises:[
+              {icon:"🏋️", name:"Goblet Squat", detail:"Kurzhantel / Kettlebell vor Brust. Tiefer Squat, Rücken gerade. Ideal als Einstieg.", badge:"4 × 10", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🏋️", name:"Romanian Deadlift (RDL)", detail:"Rückenfreundlichste Deadlift-Variante. Stange nahe am Körper, Hüfte zurück. KEIN Rundrücken.", badge:"4 × 8", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🏋️", name:"Seated Cable Row", detail:"Schulterblätter zusammenziehen – wichtig als Gegenbewegung zur Radfahrerhaltung", badge:"3 × 12", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🏋️", name:"Hip Thrust an der Bank", detail:"Stange über Hüfte, Oberkörper auf Bank. Stärkste Gesäßübung – Lauf & Rad profitieren enorm", badge:"4 × 10", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🧱", name:"Hanging Knee Raise / Ab-Rollout", detail:"Rumpf unter Zusatzlast – transferiert direkt in Laufhaltung", badge:"3 × 12", bg:"#faecd8", bc:"#BA7517"},
+            ]
+          }
+        ],
+        info:{col:"#BA7517", text:"Kraftraum ab Monat 9: Starte mit leichtem Gewicht und perfekter Technik. Rücken: RDL ist deine wichtigste Übung – stärkt alle Strukturen, die bei Rückenproblemen schwach sind."}
+      },
+      {
+        name:"Donnerstag", short:"Do", type:"rad",
+        title:"Rad-Intervalltraining",
+        duration:"60–75 Min",
+        badge:{bg:"#deedfb", col:"#154e8a", label:"Radfahren"},
+        sections:[
+          {
+            title:"Einfahren",
+            exercises:[
+              {icon:"🚴", name:"Sehr locker einfahren", detail:"15 Min Zone 1, Kadenz 80–90 rpm, flach", badge:"15 Min", bg:"#deedfb", bc:"#185FA5"},
+            ]
+          },
+          {
+            title:"Intervall-Block (ab Monat 8)",
+            exercises:[
+              {icon:"⚡", name:"Monat 7: Tempo-Wechsel", detail:"5 × 3 Min bei Zone 3 (143–157 bpm), dann 3 Min Zone 1. Erste Intensität!", badge:"5 × 3 Min", bg:"#deedfb", bc:"#185FA5"},
+              {icon:"⚡", name:"Monat 9–10: Sweet-Spot Intervalle", detail:"4 × 8 Min bei ca. 88% HFmax (oberes Zone 3). 4 Min Pause. Ötztaler-Vorbereitung!", badge:"4 × 8 Min", bg:"#deedfb", bc:"#185FA5"},
+              {icon:"⚡", name:"Monat 11–12: Bergintervalle", detail:"Suche Anstieg mit 4–6% Steigung. 5 × 4 Min bergauf Zone 3–4. Bergab locker.", badge:"5 × 4 Min", bg:"#deedfb", bc:"#185FA5"},
+            ]
+          },
+          {
+            title:"Ausfahren",
+            exercises:[
+              {icon:"🚴", name:"Locker ausfahren", detail:"10 Min Zone 1, Kadenz hoch halten – Laktat abbauen", badge:"10 Min", bg:"#deedfb", bc:"#185FA5"},
+            ]
+          }
+        ],
+        info:{col:"#185FA5", text:"Intervalle sind der schnellste Weg, die Schwelle anzuheben. Aber: max. 1 Intervalleinheit / Woche in Phase 2. Der Rest bleibt Zone 2."}
+      },
+      {
+        name:"Freitag", short:"Fr", type:"regen",
+        title:"Aktive Erholung / Mobilität",
+        duration:"20–30 Min",
+        badge:{bg:"#f0ede6", col:"#6a6860", label:"Regeneration"},
+        sections:[{
+          title:"Leichte Aktivität",
+          exercises:[
+            {icon:"🚶", name:"Spaziergang oder sehr lockeres Radeln", detail:"Unter 30 Min, HF unter 110 bpm – kein Training, nur Durchblutung", badge:"20–30 Min", bg:"#f0ede6", bc:"#9a9890"},
+            {icon:"🧘", name:"Rücken-Fokus Dehnung", detail:"Cat-Cow, Child's Pose, Hüftbeuger-Stretch – täglich wichtig bei Rückenproblemen", badge:"10 Min", bg:"#f0ede6", bc:"#9a9890"},
+          ]
+        }],
+        info:{col:"#9a9890", text:"Freitag ist Puffer. Wenn du die Woche sehr anstrengend war, heute komplett ausruhen."}
+      },
+      {
+        name:"Samstag", short:"Sa", type:"lauf",
+        title:"Langer Lauf (progressiv aufbauend)",
+        duration:"60–120 Min",
+        badge:{bg:"#dff5ec", col:"#0a5a44", label:"Laufen"},
+        sections:[
+          {
+            title:"Langer Lauf – Herzstück von Phase 2",
+            exercises:[
+              {icon:"🏃", name:"Monat 7–8: 60–70 Min Zone 2", detail:"Distanz: 10–12 km. Erster echter Langstreckenlauf. Tempo: 6:00–7:00 / km. Gel/Wasser mitnehmen!", badge:"60–70 Min", bg:"#dff5ec", bc:"#1D9E75"},
+              {icon:"🏃", name:"Monat 9–10: 75–90 Min Zone 2", detail:"Distanz: 13–15 km. Halbmarathon-Vorbereitung beginnt. Ernährungsstrategie testen.", badge:"75–90 Min", bg:"#dff5ec", bc:"#1D9E75"},
+              {icon:"🏃", name:"Monat 11–12: 90–110 Min Zone 2", detail:"Distanz: 15–18 km. Längster Lauf bisher. Letzten 10–15 Min etwas zulegen – Marathon-Pace üben.", badge:"90–110 Min", bg:"#dff5ec", bc:"#1D9E75"},
+            ]
+          },
+          {
+            title:"Regel: +10% / Woche, jede 4. Woche –30%",
+            exercises:[
+              {icon:"📊", name:"Beispiel-Progression (Distanz)", detail:"Wo 1: 12 km → Wo 2: 13 km → Wo 3: 14 km → Wo 4 (Regen): 10 km → Wo 5: 15 km …", badge:"Regel", bg:"#dff5ec", bc:"#1D9E75"},
+            ]
+          }
+        ],
+        info:{col:"#1D9E75", text:"Der lange Lauf ist die wichtigste Einheit für den Marathon. Verlangsamung zum Ende = zu schnell gestartet. Ziel: gleichmäßiges Tempo von Minute 1 bis Minute 90."}
+      },
+      {
+        name:"Sonntag", short:"So", type:"rad",
+        title:"Lange Radausfahrt",
+        duration:"90–180 Min",
+        badge:{bg:"#deedfb", col:"#154e8a", label:"Radfahren"},
+        sections:[
+          {
+            title:"Lange Ausdauerfahrt – Ötztal-Grundlage",
+            exercises:[
+              {icon:"🚴", name:"Monat 7–8: 80–100 km Zone 2", detail:"Flach bis leicht hügelig. Kadenz 85–90 rpm. Ernährung: alle 45 Min Gel/Riegel. 1 Trinkflasche / Stunde.", badge:"2,5–3 h", bg:"#deedfb", bc:"#185FA5"},
+              {icon:"🚴", name:"Monat 9–10: 100–130 km mit ersten Bergen", detail:"Anstiege mit 300–500 Hm einbauen. HF bei Anstiegen auf Zone 3 erlaubt. Regeneration im Flachen.", badge:"3–4 h", bg:"#deedfb", bc:"#185FA5"},
+              {icon:"🚴", name:"Monat 11–12: 130–160 km, 800–1200 Hm", detail:"Erste ernsthafte Bergausfahrten. Ötztaler-Strecke analysieren, Pässe simulieren (z.B. Kühtai-Anstieg)", badge:"4–5 h", bg:"#deedfb", bc:"#185FA5"},
+            ]
+          },
+          {
+            title:"Ernährung auf dem Rad (kritisch!)",
+            exercises:[
+              {icon:"🍌", name:"Ernährungsstrategie Long Ride", detail:"Stunde 1: 60g Kohlenhydrate/h (Gel + Riegel). Stunde 2+: 80–90g KH/h. Salztabletten ab 2h. Nie ohne Essen fahren!", badge:"Pflicht", bg:"#deedfb", bc:"#185FA5"},
+            ]
+          }
+        ],
+        info:{col:"#185FA5", text:"Lange Radausfahrten bauen die aerobe Basis für den Ötztaler. 5.500 Höhenmeter an einem Tag sind nur möglich, wenn du 4–5h-Ausfahrten ohne Einbruch überlebst."}
+      },
+    ]
+  },
+
+  // ══════════════════════════════════════════════
+  // PHASE 3 – ENTWICKLUNG (Monat 13–18)
+  // ══════════════════════════════════════════════
+  {
+    id:2, label:"Phase 3", sub:"Entwicklung", months:"Monat 13–18", col:"#BA7517",
+    chips:[
+      {l:"Laufen / Wo", v:"50–70 km"},
+      {l:"Rad / Wo", v:"200–300 km"},
+      {l:"Höhenmeter", v:"2.000+ / Wo"},
+      {l:"HF-Ziel", v:"Z2 + Z3/Z4"},
+    ],
+    days:[
+      {name:"Montag",short:"Mo",type:"regen",title:"Ruhe / Dehnung",duration:"30 Min",badge:{bg:"#f0ede6",col:"#6a6860",label:"Regeneration"},
+        sections:[{title:"Regeneration",exercises:[
+          {icon:"😴",name:"Komplett-Ruhe oder Spaziergang",detail:"Hohes Trainingsvolumen ab jetzt – Montag bleibt heilig frei",badge:"—",bg:"#f0ede6",bc:"#9a9890"},
+          {icon:"🧘",name:"Pflicht-Dehnung: Hüftbeuger + Hamstrings",detail:"Je 2 × 90 Sek. – verhindert Rückenprobleme bei hohem Laufvolumen",badge:"15 Min",bg:"#f0ede6",bc:"#9a9890"},
+        ]}],info:{col:"#9a9890",text:"Woche für Woche setzt jetzt hohe Belastung an. Montag ist dein Schutzpuffer."}},
+      {
+        name:"Dienstag", short:"Di", type:"lauf",
+        title:"Tempo-Lauf / Schwellentraining",
+        duration:"55–70 Min",
+        badge:{bg:"#dff5ec", col:"#0a5a44", label:"Laufen"},
+        sections:[
+          {title:"Aufwärmen",exercises:[
+            {icon:"🏃",name:"15 Min lockeres Einlaufen",detail:"Zone 1–2, Lauf-ABC, dynamisches Dehnen",badge:"15 Min",bg:"#dff5ec",bc:"#1D9E75"},
+          ]},
+          {title:"Tempo-Block (Schwelle = Zone 3–4)",exercises:[
+            {icon:"⚡",name:"Monat 13–14: 4 × 8 Min Tempo",detail:"Pace: ~5:00–5:20 / km (Zone 3, 143–157 bpm). 3 Min Trabpause. Erstes echtes Tempotraining.",badge:"4 × 8 Min",bg:"#dff5ec",bc:"#1D9E75"},
+            {icon:"⚡",name:"Monat 15–16: 3 × 12 Min Schwelle",detail:"Unbequem aber kontrolliert. Pace ~4:50–5:10 / km. 4 Min Pause.",badge:"3 × 12 Min",bg:"#dff5ec",bc:"#1D9E75"},
+            {icon:"⚡",name:"Monat 17–18: 2 × 20 Min Marathon-Pace",detail:"Ziel-Marathon-Pace üben. HF: 155–165 bpm. 5 Min Pause. Mental sehr fordernd.",badge:"2 × 20 Min",bg:"#dff5ec",bc:"#1D9E75"},
+          ]},
+          {title:"Auslaufen",exercises:[
+            {icon:"🏃",name:"10 Min sehr locker auslaufen",detail:"Pflicht – kein abruptes Stoppen nach Tempoarbeit",badge:"10 Min",bg:"#dff5ec",bc:"#1D9E75"},
+          ]},
+        ],
+        info:{col:"#1D9E75", text:"Halbmarathon-Test: In Monat 15 einen offiziellen Halbmarathon als Rennen laufen. Zeigt aktuellen Leistungsstand und gibt ersten Wettkampf-Erfahrung."}
+      },
+      {
+        name:"Mittwoch", short:"Mi", type:"kraft",
+        title:"Kraft – Erhaltung + Explosivkraft",
+        duration:"45–50 Min",
+        badge:{bg:"#faecd8", col:"#7a4609", label:"Kraft / Rumpf"},
+        sections:[
+          {title:"Kraft (Volumen reduziert, Qualität erhöht)",exercises:[
+            {icon:"🏋️",name:"Romanian Deadlift",detail:"Schwerer als Phase 2. 4–5 Sätze, 6 Wiederholungen. Stärkt Ischiokrurale + Rücken.",badge:"4 × 6",bg:"#faecd8",bc:"#BA7517"},
+            {icon:"🏋️",name:"Hip Thrust (schwer)",detail:"Maximale Gesäßaktivierung. Kurze Pause oben. Transferiert direkt in Berganfahrten.",badge:"4 × 8",bg:"#faecd8",bc:"#BA7517"},
+            {icon:"🏋️",name:"Single-Leg Romanian Deadlift",detail:"Balance + hintere Kette. Verletzungsprävention für Läufer.",badge:"3 × 8",bg:"#faecd8",bc:"#BA7517"},
+          ]},
+          {title:"Explosivkraft (neu in Phase 3)",exercises:[
+            {icon:"🔥",name:"Box Jump",detail:"Weiche Landung, volle Hüftstreckung oben. Start: 40 cm Box. Knie zeigen nach vorne.",badge:"4 × 5",bg:"#faecd8",bc:"#BA7517"},
+            {icon:"🔥",name:"Broad Jump (Weitsprung)",detail:"Beidbeinig springen, weit wie möglich. Kraft + Koordination.",badge:"4 × 5",bg:"#faecd8",bc:"#BA7517"},
+          ]},
+          {title:"Rumpf-Abschluss (10 Min)",exercises:[
+            {icon:"🧱",name:"Pallof Press + Dead Bug + Side Plank",detail:"Rumpf-Trifecta: Anti-Rotation, Anti-Extension, Lateral Stability",badge:"Je 3 × 10",bg:"#faecd8",bc:"#BA7517"},
+          ]},
+        ],
+        info:{col:"#BA7517", text:"Kraft wird ab Phase 3 auf Erhaltung reduziert (2× → 1× / Woche ab Monat 17). Explosivkraft verbessert Laufökonomie und Antritt beim Berg."}
+      },
+      {
+        name:"Donnerstag", short:"Do", type:"rad",
+        title:"Bergtraining / Hügelwiederholungen",
+        duration:"75–100 Min",
+        badge:{bg:"#deedfb", col:"#154e8a", label:"Radfahren"},
+        sections:[
+          {title:"Einfahren",exercises:[
+            {icon:"🚴",name:"15 Min einfahren",detail:"Zone 1–2, ganz locker. Beine aufwärmen.",badge:"15 Min",bg:"#deedfb",bc:"#185FA5"},
+          ]},
+          {title:"Bergintervalle – Ötztal-Spezifisch",exercises:[
+            {icon:"⛰️",name:"Monat 13–14: 6 × 5 Min bergauf",detail:"Zone 3–4 (143–172 bpm). Kadenz bergauf: 60–70 rpm. Bergab locker erholen. Steigung 5–8%",badge:"6 × 5 Min",bg:"#deedfb",bc:"#185FA5"},
+            {icon:"⛰️",name:"Monat 15–16: 4 × 12 Min bergauf",detail:"Simuliert Pässe. Pace gleichmäßig halten, nicht zu schnell starten. HF Zone 3.",badge:"4 × 12 Min",bg:"#deedfb",bc:"#185FA5"},
+            {icon:"⛰️",name:"Monat 17–18: Kompletter Passanstieg",detail:"Einen echten langen Anstieg (z.B. 500–800 Hm) von unten nach oben. Pacing üben.",badge:"1 × komplett",bg:"#deedfb",bc:"#185FA5"},
+          ]},
+        ],
+        info:{col:"#185FA5", text:"Berganstieg-Pacing ist die wichtigste Ötztal-Fähigkeit. Zu schnell gestartet = Einbruch nach 3h. Ziel: gleichmäßige Wattzahl/HF von unten bis oben."}
+      },
+      {
+        name:"Freitag", short:"Fr", type:"regen",
+        title:"Aktive Erholung",
+        duration:"20 Min",
+        badge:{bg:"#f0ede6",col:"#6a6860",label:"Regeneration"},
+        sections:[{title:"Locker",exercises:[
+          {icon:"🚶",name:"Spaziergang oder 20 Min lockeres Rad",detail:"HF unter 110 bpm. Kein Druck.",badge:"20 Min",bg:"#f0ede6",bc:"#9a9890"},
+        ]}],
+        info:{col:"#9a9890",text:"Körper für Samstag (langer Lauf) und Sonntag (Bergausfahrt) frisch halten."}
+      },
+      {
+        name:"Samstag", short:"Sa", type:"lauf",
+        title:"Langer Lauf (Pre-Marathon Vorbereitung)",
+        duration:"100–150 Min",
+        badge:{bg:"#dff5ec",col:"#0a5a44",label:"Laufen"},
+        sections:[
+          {title:"Langer Lauf mit Progression",exercises:[
+            {icon:"🏃",name:"Monat 13–14: 18–22 km",detail:"Zone 2. Letzten 3 km auf Marathon-Pace. Gel alle 40 Min testen.",badge:"90–100 Min",bg:"#dff5ec",bc:"#1D9E75"},
+            {icon:"🏃",name:"Monat 15–16: 23–27 km",detail:"Längste Läufe bisher. Ernährung & Ausrüstung wie am Renntag. Keine Experimente.",badge:"110–130 Min",bg:"#dff5ec",bc:"#1D9E75"},
+            {icon:"🏃",name:"Monat 17–18: 28–32 km (letzter langer Lauf)",detail:"3–4 Wochen vor Marathon. Danach beginnt Tapering. Wichtigste Einheit der gesamten Vorbereitung.",badge:"130–150 Min",bg:"#dff5ec",bc:"#1D9E75"},
+          ]},
+        ],
+        info:{col:"#1D9E75", text:"32 km ist genug – mehr schadet. Der Marathon-Körper wird nicht im Training gebaut, sondern in der Regeneration danach."}
+      },
+      {
+        name:"Sonntag", short:"So", type:"rad",
+        title:"Bergausfahrt (Ötztal-Simulation)",
+        duration:"180–270 Min",
+        badge:{bg:"#deedfb",col:"#154e8a",label:"Radfahren"},
+        sections:[
+          {title:"Lange Bergausfahrt",exercises:[
+            {icon:"🚴",name:"Monat 13–14: 120–150 km, 1500–2000 Hm",detail:"2–3 Pässe / längere Anstiege. Ernährungsplan einhalten. Schnitt ~22 km/h erwartet.",badge:"3,5–4,5 h",bg:"#deedfb",bc:"#185FA5"},
+            {icon:"🚴",name:"Monat 15–16: 160–200 km, 2500–3500 Hm",detail:"Ötztal-ähnliche Belastung. Kursvergleich: Ötztal hat 240 km / 5500 Hm. Du bist bei 65–75%.",badge:"4,5–6 h",bg:"#deedfb",bc:"#185FA5"},
+            {icon:"🚴",name:"Monat 17–18: 200+ km oder Ötztal-Strecke fahren",detail:"Wenn möglich: Timmelsjoch oder Kühtai echte Rekognoszierung. Psychologisch enorm wertvoll.",badge:"6+ h",bg:"#deedfb",bc:"#185FA5"},
+          ]},
+        ],
+        info:{col:"#185FA5", text:"Ernährung auf langen Ausfahrten: 80–90g Kohlenhydrate / Stunde. Das trainiert auch den Darm. Am Ötztal-Renntag wirst du 8–10h auf dem Rad sitzen."}
+      },
+    ]
+  },
+
+  // ══════════════════════════════════════════════
+  // PHASE 4 – PEAK & WETTKAMPF (Monat 19–24)
+  // ══════════════════════════════════════════════
+  {
+    id:3, label:"Phase 4", sub:"Peak & Rennen", months:"Monat 19–24", col:"#993C1D",
+    chips:[
+      {l:"Marathon-Ziel", v:"Finisher"},
+      {l:"Ötztal", v:"240 km / 5.500 Hm"},
+      {l:"Tapering", v:"3–4 Wochen"},
+      {l:"Kraft", v:"Erhaltung 1×/Wo"},
+    ],
+    days:[
+      {name:"Montag",short:"Mo",type:"regen",title:"Komplett-Ruhe / Schlaf",duration:"—",badge:{bg:"#f0ede6",col:"#6a6860",label:"Regeneration"},
+        sections:[{title:"Peak-Phase Prioritäten",exercises:[
+          {icon:"😴",name:"8–9 Stunden Schlaf",detail:"Hormoneller Höhepunkt: Testosteron, Wachstumshormon, Cortisol – alles läuft über Schlaf",badge:"Priorität 1",bg:"#f0ede6",bc:"#9a9890"},
+          {icon:"💧",name:"2,5–3 L Wasser",detail:"Plasma-Volumen steigt durch Ausdauertraining – Hydration ist jetzt noch wichtiger",badge:"Pflicht",bg:"#f0ede6",bc:"#9a9890"},
+        ]}],info:{col:"#9a9890",text:"In Phase 4 wird trainierst du nicht mehr 'fitter' – du konsolidierst. Erholung ist die Leistung."}},
+      {
+        name:"Dienstag", short:"Di", type:"lauf",
+        title:"Qualitätslauf – Marathon-spezifisch",
+        duration:"60–75 Min",
+        badge:{bg:"#dff5ec",col:"#0a5a44",label:"Laufen"},
+        sections:[
+          {title:"Einlaufen",exercises:[
+            {icon:"🏃",name:"15 Min Zone 1–2",detail:"Sehr locker, Beine wecken",badge:"15 Min",bg:"#dff5ec",bc:"#1D9E75"},
+          ]},
+          {title:"Marathon-Pace Arbeit",exercises:[
+            {icon:"⚡",name:"Monat 19–20: 3 × 15 Min Marathon-Pace",detail:"Ziel-Pace für den Marathon halten. 5 Min Pause. HF: 158–168 bpm.",badge:"3 × 15 Min",bg:"#dff5ec",bc:"#1D9E75"},
+            {icon:"⚡",name:"Monat 21–22: 2 × 25 Min Marathon-Pace",detail:"Mentale Stärke aufbauen. Das WIRD unbequem. Genau richtig.",badge:"2 × 25 Min",bg:"#dff5ec",bc:"#1D9E75"},
+            {icon:"⚡",name:"Tapering (Monat 23–24): Volumen –40 %",detail:"Kürzere, schnelle Einheiten. 4 × 5 Min Pace + viel Erholung. Beine frisch halten.",badge:"4 × 5 Min",bg:"#dff5ec",bc:"#1D9E75"},
+          ]},
+          {title:"Auslaufen",exercises:[
+            {icon:"🏃",name:"10 Min locker",detail:"Immer. Ohne Ausnahme.",badge:"10 Min",bg:"#dff5ec",bc:"#1D9E75"},
+          ]},
+        ],
+        info:{col:"#1D9E75", text:"Marathon Race-Day Plan: Erste 10 km 10–15 Sek./km langsamer als Ziel-Pace. Hälfte: Entscheidung ob Pace halten. Ab km 35: alles geben."}
+      },
+      {
+        name:"Mittwoch", short:"Mi", type:"regen",
+        title:"Sehr lockeres Rad (Beine locker halten)",
+        duration:"45–60 Min",
+        badge:{bg:"#deedfb",col:"#154e8a",label:"Radfahren"},
+        sections:[{title:"Aktive Erholung auf dem Rad",exercises:[
+          {icon:"🚴",name:"45–60 Min Zone 1, sehr flach",detail:"HF unter 125 bpm. Kadenz hoch (90+ rpm). Kein Ehrgeiz. Beine für Donnerstag frisch halten.",badge:"45–60 Min",bg:"#deedfb",bc:"#185FA5"},
+        ]}],
+        info:{col:"#185FA5",text:"Mittwoch ist kein echter Radtag – es ist aktive Regeneration mit dem Rad als Mittel."}
+      },
+      {
+        name:"Donnerstag", short:"Do", type:"lauf",
+        title:"Lauf Zone 3 – Schwellen-Erhaltung",
+        duration:"50–60 Min",
+        badge:{bg:"#dff5ec",col:"#0a5a44",label:"Laufen"},
+        sections:[
+          {title:"Schwellen-Erhaltung",exercises:[
+            {icon:"🏃",name:"10 Min einlaufen",detail:"Zone 1–2",badge:"10 Min",bg:"#dff5ec",bc:"#1D9E75"},
+            {icon:"⚡",name:"20–30 Min Zone 3 (143–157 bpm)",detail:"Konstantes Tempo. Nicht in Zone 4 abdriften. Dieses Training erhält die aufgebaute Schwelle.",badge:"20–30 Min",bg:"#dff5ec",bc:"#1D9E75"},
+            {icon:"🏃",name:"10 Min auslaufen",detail:"Zone 1",badge:"10 Min",bg:"#dff5ec",bc:"#1D9E75"},
+          ]},
+        ],
+        info:{col:"#1D9E75",text:"2 Lauftage / Woche in Phase 4 – einer schnell (Di), einer mittel (Do). Das ist die Marathon-Formel."}
+      },
+      {
+        name:"Freitag", short:"Fr", type:"regen",
+        title:"Ruhe / Dehnen",
+        duration:"20 Min",
+        badge:{bg:"#f0ede6",col:"#6a6860",label:"Regeneration"},
+        sections:[{title:"Pflicht-Routine vor dem Wochenende",exercises:[
+          {icon:"🧘",name:"10 Min Dehnen: Hüftbeuger, Waden, Hamstrings",detail:"Freitag-Abend – Körper auf Samstag vorbereiten",badge:"10 Min",bg:"#f0ede6",bc:"#9a9890"},
+          {icon:"🍽️",name:"Carb-Loading beginnen (vor Wettkämpfen)",detail:"72 h vor Marathon: 8–10g KH / kg Körpergewicht / Tag. Pasta, Reis, Brot.",badge:"Renntag –3",bg:"#f0ede6",bc:"#9a9890"},
+        ]}],
+        info:{col:"#9a9890",text:"Carb-Loading ist Wissenschaft: Muskeln werden zu Glykogentanks. 3 Tage vorher beginnen, nicht erst am Abend davor."}
+      },
+      {
+        name:"Samstag", short:"Sa", type:"rad",
+        title:"Wettkampfsimulation / Generalprobe",
+        duration:"240–360 Min",
+        badge:{bg:"#deedfb",col:"#154e8a",label:"Radfahren"},
+        sections:[
+          {title:"Ötztal-Generalprobe (4 Wochen vor dem Rennen)",exercises:[
+            {icon:"🚴",name:"200+ km mit 4.000+ Hm",detail:"So nah wie möglich am Renntag. Selbes Rad, selbe Ausrüstung, selbe Ernährung. Zeigt wo Schwachstellen sind.",badge:"6–8 h",bg:"#deedfb",bc:"#185FA5"},
+            {icon:"🚴",name:"Marathon-Tapering: 80–100 km locker",detail:"3 Wochen vor Marathon: letzter langer Rad-Tag. Dann Volumen stark reduzieren.",badge:"3–4 h",bg:"#deedfb",bc:"#185FA5"},
+          ]},
+          {title:"Race-Day Checkliste (2 Wochen vor dem Rennen üben)",exercises:[
+            {icon:"✅",name:"Ausrüstung final testen",detail:"Trikot, Helm, Schuhe, Pedale, Garmin-Einstellungen, Ersatzschlauch",badge:"Check",bg:"#deedfb",bc:"#185FA5"},
+            {icon:"✅",name:"Ernährungs-Plan final fixieren",detail:"Wann welches Gel, wann Wasser, wann Riegel. Aufs Oberrohr kleben.",badge:"Plan",bg:"#deedfb",bc:"#185FA5"},
+          ]},
+        ],
+        info:{col:"#185FA5", text:"Die Generalprobe zeigt alles: Sitzposition nach 5h, Magenprobleme, Pacing-Fehler. Besser jetzt entdecken als am Renntag."}
+      },
+      {
+        name:"Sonntag", short:"So", type:"regen",
+        title:"Regeneration & mentale Vorbereitung",
+        duration:"—",
+        badge:{bg:"#f0ede6",col:"#6a6860",label:"Regeneration"},
+        sections:[{title:"Peak & Taper Woche",exercises:[
+          {icon:"😴",name:"Schlafen & Erholen",detail:"Nach der Generalprobe: Sonntag komplett frei. Körper braucht 48–72h für volle Erholung.",badge:"Pflicht",bg:"#f0ede6",bc:"#9a9890"},
+          {icon:"🧠",name:"Mentales Training / Visualisierung",detail:"Rennstrecke im Kopf fahren. Kritische Momente (km 30 beim Marathon, Timmelsjoch) mental vorwegnehmen.",badge:"Optional",bg:"#f0ede6",bc:"#9a9890"},
+          {icon:"🏆",name:"HRV-Monitoring (wenn Smartwatch unterstützt)",detail:"Niedrige HRV = mehr Erholung nötig. Hohe HRV = bereit für Belastung. Über Wochen beobachten.",badge:"Empfohlen",bg:"#f0ede6",bc:"#9a9890"},
+        ]}],
+        info:{col:"#9a9890",text:"Taper-Angst ist real: du wirst dich 2 Wochen vor dem Rennen müde und langsam fühlen. Das ist normal – der Körper lädt auf. Vertraue dem Prozess."}
+      },
+    ]
+  }
+];
+
+// ─── STATE ────────────────────────────────────────────────────────────────
+let curPhase = 0; let curDay = 0;
+
+
+// ─── RENDER ───────────────────────────────────────────────────────────────
+function renderTPhases() {
+  document.getElementById('tPhaseRow').innerHTML = phases.map((p,i) => `
+    <div class="ppill ${i===curPhase?'active':''}"
+      style="${i===curPhase?'background:'+p.col+';border-color:'+p.col:''}"
+      onclick="selectTPhase(${i})">${p.label} – ${p.sub}</div>`).join('');
+}
+
+function renderTDays() {
+  const p = phases[curPhase];
+  document.getElementById('tDayTabs').innerHTML = p.days.map((d,i) => `
+    <div class="dtab t-${d.type} ${i===curDay?'active':''}" onclick="selectTDay(${i})">${d.short}</div>`
+  ).join('');
+}
+
+function renderTDay() {
+  const p  = phases[curPhase];
+  const d  = p.days[curDay];
+  const tc = {lauf:"#dff5ec",rad:"#deedfb",kraft:"#faecd8",regen:"#f0ede6",kombi:"#fbe8f0"};
+
+  // chips
+  const chipsHtml = p.chips.map(c=>`<div class="chip">${c.l}: <span>${c.v}</span></div>`).join('');
+
+  // sections
+  const sectionsHtml = d.sections.map(s => `
+    <div class="section">
+      <div class="section-title">${s.title}</div>
+      <div class="ex-list">
+        ${s.exercises.map(e => `
+          <div class="ex">
+            <div class="ex-icon">${e.icon}</div>
+            <div class="ex-body">
+              <div class="ex-name">${e.name}</div>
+              <div class="ex-detail">${e.detail}</div>
+            </div>
+            <div class="ex-badge" style="background:${e.bg};color:${e.bc}">${e.badge}</div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  document.getElementById('tDayContent').innerHTML = `
+    <div class="card">
+      <div class="chips">${chipsHtml}</div>
+      <div class="day-header">
+        <div class="day-badge" style="background:${d.badge.bg};color:${d.badge.col}">${d.badge.label}</div>
+        <div class="day-duration">${d.duration}</div>
+      </div>
+      <div class="day-title">${d.title}</div>
+    </div>
+    <div class="card">
+      ${sectionsHtml}
+      <div class="info-box" style="--accent:${p.col}">${d.info.text}</div>
+    </div>
+  `;
+}
+
+function selectTPhase(i) { curPhase=i; curDay=0; renderTPhases(); renderTDays(); renderTDay(); }
+function selectTDay(i)   { curDay=i; renderTDays(); renderTDay(); }
+
+renderTPhases();
+renderTDays();
+renderTDay();
+
+/* ══ NUTRITION DATA ══ */
+const EP = [
+  {
+    phase:"Phase 1 - Fundament",col:"#1D9E75",protein:122,pgkg:1.6,kcal:2400,fat:67,
+    tip:"Basisphase: 2.300-2.500 kcal/Tag. Fokus auf echte, unverarbeitete Lebensmittel. Taeglich 25-30g Ballaststoffe. Mindestens 2x fetter Fisch pro Woche. 2,5-3 Liter Wasser taeglich.",
+    meals:{
+      "Fruehstueck":[
+        {n:"Haferbrei klassisch",d:"80g Haferflocken, Chiasamen, Walnuesse, Blaubeeren, Mandelmilch",k:"~420 kcal",t:["o","b"]},
+        {n:"Ruehrei und Vollkornbrot",d:"3 Eier, 2 Scheiben Vollkornbrot, Tomate, Gurke, Kraeuter",k:"~390 kcal",t:["p","b"]},
+        {n:"Overnight Oats",d:"Haferflocken, Naturjoghurt, Leinsamen, Apfelstuecke, Zimt, Honig",k:"~380 kcal",t:["o","b","p"]},
+        {n:"Lachs-Bagel",d:"Vollkornbagel, Frischkaese, Raeucherlachs, Gurke, rote Zwiebel",k:"~440 kcal",t:["o","p","b"]},
+        {n:"Gruener Smoothie",d:"Spinat, Banane, Hafermilch, Mandelmus, Leinsamen, Ingwer",k:"~340 kcal",t:["o","b"]},
+        {n:"Joghurt-Bowl",d:"Griech. Joghurt 200g, Granola, Beeren, Kuerbiskerne, Honig",k:"~410 kcal",t:["p","b"]},
+        {n:"Vollkornpfannkuchen",d:"Vollkornmehl, 2 Eier, Hafermilch, Banane, Blaubeeren",k:"~430 kcal",t:["p","b","c"]},
+        {n:"Avocado-Lachs-Toast",d:"3 Scheiben Vollkornbrot, Avocado, Raeucherlachs, Zitrone",k:"~460 kcal",t:["o","p","b"]},
+      ],
+      "Mittagessen":[
+        {n:"Lachs mit Quinoa",d:"150g Lachsfilet, 80g Quinoa, Blattsalat, Leinoel-Zitrone",k:"~520 kcal",t:["o","p","b"]},
+        {n:"Haehnchen-Bowl",d:"Haehnchenbrust, Bulgur, Kichererbsen, Gurke, Tomate, Hummus",k:"~490 kcal",t:["p","b","c"]},
+        {n:"Linsensuppe",d:"Rote Linsen, Karotten, Sellerie, Ingwer, Kurkuma, Vollkornbrot",k:"~430 kcal",t:["b","p","c"]},
+        {n:"Makrelen-Salat",d:"Makrele (Dose), Feldsalat, Apfel, Walnuesse, Apfelessig-Dressing",k:"~440 kcal",t:["o","b","p"]},
+        {n:"Gemuese-Curry",d:"Kichererbsen, Suesskartoffel, Spinat, Kokosmilch, Vollkornreis",k:"~510 kcal",t:["b","c","p"]},
+        {n:"Thunfisch-Wrap",d:"Vollkorn-Tortilla, Thunfisch, Avocado, Mais, Salatblaetter",k:"~480 kcal",t:["o","p","b","c"]},
+        {n:"Putensalat",d:"Putenbrust 150g, Rucola, Kirschtomaten, Parmesan, Olivenoel",k:"~410 kcal",t:["p","b"]},
+        {n:"Fischsuppe mediterran",d:"Lachs + Garnelen, Tomaten, Fenchel, Safran, Vollkornbrot",k:"~460 kcal",t:["o","p","b"]},
+      ],
+      "Abendessen":[
+        {n:"Haehnchen und Gemuese",d:"150g Haehnchen, Brokkoli, Suesskartoffel, Kuerbiskernoel",k:"~450 kcal",t:["p","b","c"]},
+        {n:"Makrele und Hirse",d:"150g Makrelenfilet, Hirse, geduenstete Zucchini, Petersilie",k:"~470 kcal",t:["o","p","b","c"]},
+        {n:"Tofu-Wok",d:"Tofu, Brokkoli, Paprika, Pak Choi, Ingwer, Sojasauce, Reis",k:"~430 kcal",t:["p","b","c"]},
+        {n:"Ofengemuese und Ei",d:"Paprika, Aubergine, Zucchini geroestet + 2 pochierte Eier",k:"~380 kcal",t:["p","b"]},
+        {n:"Forelle und Kartoffeln",d:"200g Forelle, Ofenkartoffeln, Salat, Dill-Joghurt-Sauce",k:"~490 kcal",t:["o","p","b","c"]},
+        {n:"Linsen-Dal",d:"Rote Linsen, Kokosmilch, Spinat, Tomaten, Vollkorn-Naan",k:"~510 kcal",t:["b","p","c"]},
+        {n:"Lachs-Teriyaki",d:"150g Lachs, Teriyaki-Marinade, Pak Choi, Jasminreis",k:"~480 kcal",t:["o","p","c"]},
+        {n:"Haehnchen-Gemuese-Pfanne",d:"Haehnchen, Zucchini, Paprika, Tomaten, Oliven, Vollkornnudeln",k:"~500 kcal",t:["p","b","c"]},
+      ],
+      "Snacks":[
+        {n:"Walnuesse und Apfel",d:"30g Walnuesse + 1 mittelgrosser Apfel",k:"~200 kcal",t:["o","b"]},
+        {n:"Quark-Bowl",d:"150g Magerquark, 1 EL Leinsamen, Beeren, Honig",k:"~180 kcal",t:["p","o","b"]},
+        {n:"Reiswaffeln und Mandelmus",d:"3 Reiswaffeln + 2 EL Mandelmus + Bananenscheiben",k:"~230 kcal",t:["c","o"]},
+        {n:"Edamame",d:"150g Edamame leicht gesalzen - proteinreich",k:"~190 kcal",t:["p","b"]},
+        {n:"Chia-Pudding",d:"3 EL Chiasamen, Mandelmilch, Vanille, frische Beeren",k:"~210 kcal",t:["o","b"]},
+        {n:"Huettenkaese und Cracker",d:"150g Huettenkaese, 4 Vollkorncracker, Gurke",k:"~200 kcal",t:["p","b"]},
+        {n:"Obst und Nuesse",d:"1 Banane + 20g Mandeln + 10g Cashews",k:"~220 kcal",t:["b","c"]},
+        {n:"Karottensticks und Hummus",d:"2 Karotten + 3 EL Hummus selbstgemacht",k:"~180 kcal",t:["b","p"]},
+      ],
+      "Pre-Workout":[
+        {n:"Banane + Reiswaffel",d:"1 Banane + 2 Reiswaffeln - 30 Min vor lockerer Einheit",k:"~180 kcal",t:["c","pre"]},
+        {n:"Toast und Marmelade",d:"2 Scheiben Weissbrot + Marmelade - vor langen Einheiten",k:"~200 kcal",t:["c","pre"]},
+        {n:"Datteln und Walnuesse",d:"3 Datteln + 15g Walnuesse - vor Krafttraining",k:"~160 kcal",t:["c","o","pre"]},
+        {n:"Haferbrei leicht",d:"50g Hafer, Banane, Honig - 2h vor Training",k:"~300 kcal",t:["c","b","pre"]},
+      ],
+      "Post-Workout":[
+        {n:"Protein-Shake",d:"Whey 20g + Hafermilch + Banane - sofort nach Training",k:"~250 kcal",t:["p","c","post"]},
+        {n:"Joghurt und Beeren",d:"200g griech. Joghurt + Beeren + Honig - 30-Min-Fenster",k:"~220 kcal",t:["p","b","post"]},
+        {n:"Ruehrei auf Toast",d:"2 Eier + 1 Scheibe Vollkornbrot - nach Kraft",k:"~280 kcal",t:["p","c","post"]},
+        {n:"Huettenkaese und Banane",d:"200g Huettenkaese + 1 Banane - guenstige Regeneration",k:"~240 kcal",t:["p","c","post"]},
+      ],
+    },
+    omega:[
+      {col:"#185FA5",n:"Lachs 2x/Woche",d:"Fettreicher Meeresfisch, ~2g EPA+DHA pro Portion"},
+      {col:"#185FA5",n:"Makrele und Hering",d:"Guenstige Alternative, sehr hoher Omega-3-Gehalt"},
+      {col:"#1D9E75",n:"Walnuesse 30g/Tag",d:"Beste pflanzliche Omega-3-Quelle (ALA)"},
+      {col:"#1D9E75",n:"Leinsamen 1 EL/Tag",d:"Gemahlen aufnehmen! Auch reich an Ballaststoffen"},
+      {col:"#1D9E75",n:"Chiasamen taeglich",d:"Omega-3 + loesliche Ballaststoffe + Kalzium"},
+      {col:"#1D9E75",n:"Leinoel (kalt)",d:"Fuer Dressings - 1 EL deckt ALA-Tagesbedarf"},
+    ],
+  },
+  {
+    phase:"Phase 2 - Aufbau",col:"#185FA5",protein:144,pgkg:1.9,kcal:2800,fat:78,
+    tip:"Aufbauphase: 2.700-3.000 kcal/Tag. Hoehere Trainingsvolumen benoetigt mehr Energie. Vor langen Einheiten mehr Carbs laden. Nach intensiven Einheiten: 20-25g Protein + Kohlenhydrate im 30-Min-Fenster. Ballaststoffe: 30-40g/Tag.",
+    meals:{
+      "Fruehstueck":[
+        {n:"Power-Porridge",d:"120g Hafer, Banane, Rosinen, Mandeln, Honig, Zimt",k:"~510 kcal",t:["b","c"]},
+        {n:"Protein-Pancakes",d:"4 Eier, 80g Haferflocken, Banane, Beeren, Ahornsirup",k:"~560 kcal",t:["p","c","b"]},
+        {n:"Lachs-Ruehrei",d:"3 Eier + 80g Raeucherlachs, Vollkornbrot, Avocado",k:"~530 kcal",t:["o","p","b"]},
+        {n:"Muesli XL",d:"Vollkorn-Muesli 80g, Nuesse, Samen, Beeren, Naturjoghurt 200g",k:"~520 kcal",t:["b","p","o"]},
+        {n:"Smoothie-Bowl",d:"Gefrorene Beeren, Banane, Proteinpulver 20g, Granola, Hanfsamen",k:"~490 kcal",t:["p","b","c","o"]},
+        {n:"Avocado-Toast XL",d:"3 Scheiben Vollkornbrot, Avocado, 2 Eier pochiert, Raeucherlachs",k:"~570 kcal",t:["p","b","o"]},
+        {n:"Joghurt-Bowl XL",d:"250g griech. Joghurt, Granola, Walnuesse, Beeren, Honig, Leinsamen",k:"~510 kcal",t:["p","b","o"]},
+        {n:"French Toast Vollkorn",d:"3 Scheiben Vollkornbrot in Ei-Milch-Gemisch, Beeren",k:"~540 kcal",t:["p","c","b"]},
+      ],
+      "Mittagessen":[
+        {n:"Lachs-Pastasalat",d:"Vollkornnudeln, Lachs, Oliven, Kirschtomaten, Rucola",k:"~590 kcal",t:["o","p","c","b"]},
+        {n:"Haehnchen-Curry",d:"Haehnchen 180g, Kichererbsen, Spinat, Kokosmilch, Vollkornreis",k:"~610 kcal",t:["p","b","c"]},
+        {n:"Rindfleisch-Eintopf",d:"Mageres Rinderhack, Linsen, Karotten, Kartoffeln, Sellerie",k:"~560 kcal",t:["p","b","c"]},
+        {n:"Buddha-Bowl",d:"Quinoa, geroestete Kichererbsen, Avocado, Edamame, Tahini",k:"~580 kcal",t:["p","b","o","c"]},
+        {n:"Thunfisch-Nicoise",d:"Thunfisch, Eier, gruene Bohnen, Kartoffeln, Oliven",k:"~540 kcal",t:["o","p","b","c"]},
+        {n:"Lachsburger",d:"Vollkornbroetchen, Lachspatty 180g, Salat, Tzatziki",k:"~570 kcal",t:["o","p","b"]},
+        {n:"Haehnchen-Wrap XL",d:"Vollkorn-Tortilla, Haehnchen, Avocado, Salsa, Mais, Bohnen",k:"~600 kcal",t:["p","c","b"]},
+        {n:"Linsen-Quinoa-Bowl",d:"Linsen + Quinoa, gebratenes Gemuese, Feta, Granatapfelkerne",k:"~550 kcal",t:["b","p","c"]},
+      ],
+      "Abendessen":[
+        {n:"Bolognese Vollkorn",d:"Vollkornnudeln 150g, Rinderhack mager, Tomaten-Gemuese-Sauce",k:"~610 kcal",t:["p","c","b"]},
+        {n:"Lachs und Ofenkartoffeln",d:"200g Lachs, 2 Ofenkartoffeln, Spinat, Kraeuterquark",k:"~590 kcal",t:["o","p","c","b"]},
+        {n:"Putenbrust",d:"200g Putenbrust, Suesskartoffelpueree, gruene Bohnen, Leinoel",k:"~560 kcal",t:["p","c","b","o"]},
+        {n:"Haehnchen-Stir-Fry",d:"Haehnchen 180g, Brokkoli, Karotten, Pak Choi, Reisnudeln",k:"~570 kcal",t:["p","b","c"]},
+        {n:"Makrelen-Bowl",d:"Makrele 200g, Quinoa, Rucola, Avocado, Kuerbiskerne",k:"~600 kcal",t:["o","p","b","c"]},
+        {n:"Hering und Kartoffeln",d:"Hering geraeuchert, Kartoffeln, Rote Bete, Joghurt-Dill",k:"~520 kcal",t:["o","p","b","c"]},
+        {n:"Gemuese-Frittata",d:"5 Eier, Zucchini, Paprika, Feta, Spinat, Vollkornbrot",k:"~540 kcal",t:["p","b"]},
+        {n:"Lachssteak und Gemuese",d:"200g Lachssteak, buntes Ofengemuese, Couscous",k:"~610 kcal",t:["o","p","b","c"]},
+      ],
+      "Snacks":[
+        {n:"Post-Run Shake",d:"Whey 25g + Banane + Hafermilch 300ml - sofort nach Training",k:"~290 kcal",t:["p","c"]},
+        {n:"Joghurt und Nuesse",d:"200g griech. Joghurt, 20g Walnuesse, Leinsamen, Beeren",k:"~280 kcal",t:["p","o","b"]},
+        {n:"Bananenbrot-Scheibe",d:"Selbstgemacht: Hafer, Banane, Ei, Walnuesse, Chiasamen",k:"~260 kcal",t:["b","c","o"]},
+        {n:"Datteln und Nuesse",d:"4 Datteln + 20g Walnuesse + 20g Mandeln",k:"~270 kcal",t:["c","b","o"]},
+        {n:"Reiswaffeln und Mandelbutter",d:"3 Reiswaffeln + 2 EL Mandelbutter + Banane",k:"~260 kcal",t:["c","o"]},
+        {n:"Vollkornbrot und Kaese",d:"2 Scheiben Vollkornbrot, Emmentaler, Tomate, Gurke",k:"~250 kcal",t:["p","b","c"]},
+        {n:"Quark und Fruechte",d:"200g Magerquark + Ananas + 1 EL Haferflocken",k:"~230 kcal",t:["p","c","b"]},
+        {n:"Sauerkirsch-Smoothie",d:"Kirschen, Banane, Ingwer, Kurkuma, Mandelmilch",k:"~240 kcal",t:["b","c","o"]},
+      ],
+      "Pre-Workout":[
+        {n:"Porridge (90 Min vorher)",d:"60g Hafer, Banane, Honig - vor langer Einheit",k:"~350 kcal",t:["c","b","pre"]},
+        {n:"Toast und Marmelade",d:"2 Scheiben Toast + Marmelade + Banane",k:"~280 kcal",t:["c","pre"]},
+        {n:"Reiswaffeln und Erdnussmus",d:"3 Reiswaffeln + 2 EL Erdnussmus - 45 Min vor Training",k:"~270 kcal",t:["c","p","pre"]},
+        {n:"Haehnchen-Reis (2h vorher)",d:"100g Haehnchen + 80g Basmatireis - vor Krafttraining",k:"~380 kcal",t:["p","c","pre"]},
+      ],
+      "Post-Workout":[
+        {n:"Whey + Banane sofort",d:"Whey 25g + 1 Banane - im 30-Min-Fenster",k:"~270 kcal",t:["p","c","post"]},
+        {n:"Chocolate Milk",d:"400ml fettarme Schokomilch - bewaehrter Recovery-Drink",k:"~280 kcal",t:["p","c","post"]},
+        {n:"Huettenkaese und Ananas",d:"200g Huettenkaese + Ananas-Stuecke",k:"~240 kcal",t:["p","c","post"]},
+        {n:"Ruehrei und Vollkorntoast",d:"3 Eier + 2 Scheiben Toast - nach Kraft-Ausdauer-Kombi",k:"~380 kcal",t:["p","c","post"]},
+      ],
+    },
+    omega:[
+      {col:"#185FA5",n:"Lachs 2-3x/Woche",d:"Erhoehte Frequenz durch hoehere Trainingsvolumen"},
+      {col:"#185FA5",n:"Thunfisch (Dose)",d:"Praktisch fuer Alltag, guter Protein+Omega-3-Mix"},
+      {col:"#1D9E75",n:"Leinsamen taeglich",d:"1-2 EL gemahlen ins Fruehstueck oder Joghurt"},
+      {col:"#1D9E75",n:"Walnuesse und Hanfsamen",d:"Hanfsamen auch reich an vollstaendigen Proteinen"},
+      {col:"#1D9E75",n:"Psylliumschalen",d:"Loesliche Ballaststoffe, super fuer Darmgesundheit"},
+      {col:"#1D9E75",n:"Huelsenfrueche 3x/Woche",d:"Linsen, Kichererbsen - Ballaststoffe + Pflanzprotein"},
+    ],
+  },
+  {
+    phase:"Phase 3 - Entwicklung",col:"#BA7517",protein:167,pgkg:2.2,kcal:3200,fat:89,
+    tip:"Entwicklungsphase: 3.000-3.400 kcal/Tag. Kohlenhydrate periodisieren - vor Intensiveinheiten voll laden, Ruhetage leicht reduziert. Anti-entzuendlich: taeglich Omega-3, Kurkuma, Ingwer, Beeren. Salz nach langen Einheiten gezielt ersetzen!",
+    meals:{
+      "Fruehstueck":[
+        {n:"XL Lachs-Ruehrei",d:"4 Eier + 100g Raeucherlachs, Avocado, Rucola, Sauerteigbrot",k:"~620 kcal",t:["o","p","b"]},
+        {n:"Protein-Porridge",d:"130g Hafer, Proteinpulver 20g, Banane, Walnuesse, Beeren",k:"~580 kcal",t:["p","c","b","o"]},
+        {n:"Vollkorn-Pancakes XL",d:"Vollkornmehl 100g, 3 Eier, Huettenkaese, Beeren, Hanfsamen",k:"~590 kcal",t:["p","c","b"]},
+        {n:"Sardinen-Toast",d:"Sauerteigbrot, Sardinen (Dose), Avocado, Zitrone",k:"~510 kcal",t:["o","p","b"]},
+        {n:"Quark-Waffeln",d:"Magerquark 200g, 3 Eier, Hafermehl, Vanille - mit Beeren",k:"~530 kcal",t:["p","c","b"]},
+        {n:"Granola-Power-Bowl",d:"Selbstgem. Granola, Joghurt 250g, Obst",k:"~570 kcal",t:["b","p","o"]},
+        {n:"Shakshuka",d:"4 Eier in Tomaten-Paprika-Sauce, Feta, Vollkornbrot",k:"~540 kcal",t:["p","b","c"]},
+        {n:"Bananenbrot XL",d:"Selbstgem. mit Hafer, Walnuesse, Chiasamen + 3 Eier Ruehrei",k:"~610 kcal",t:["p","c","b","o"]},
+      ],
+      "Mittagessen":[
+        {n:"Lachs-Quinoa-Bowl",d:"200g Lachs, Quinoa 100g, Avocado, Edamame, Miso-Dressing",k:"~680 kcal",t:["o","p","b","c"]},
+        {n:"Haehnchen-Couscous",d:"200g Haehnchen, Couscous 120g, Kichererbsen, Harissa",k:"~660 kcal",t:["p","c","b"]},
+        {n:"Rindfleisch-Bowl",d:"Roastbeef 180g, Rucola, Walnuesse, Parmesan, Kirschtomaten",k:"~580 kcal",t:["p","o","b"]},
+        {n:"Linsendal XL",d:"Gruene Linsen 120g, Spinat, Tomate, Kokosmilch, Vollkornbrot",k:"~610 kcal",t:["b","p","c"]},
+        {n:"Lachs-Pasta",d:"Vollkornspaghetti 180g, Lachswuerfel, Zucchini, Tomaten",k:"~670 kcal",t:["o","p","c","b"]},
+        {n:"Hering-Kartoffel-Salat",d:"Hering, Kartoffeln, Apfel, Senf-Dill-Dressing",k:"~580 kcal",t:["o","p","c","b"]},
+        {n:"Sashimi-Bowl",d:"Thunfisch roh 200g, Sushi-Reis, Gurke, Avocado, Edamame",k:"~620 kcal",t:["o","p","c"]},
+        {n:"Haehnchen-Soba",d:"Soba-Nudeln, Haehnchen 180g, Bok Choi, Karotten, Sesam-Sauce",k:"~630 kcal",t:["p","b","c"]},
+      ],
+      "Abendessen":[
+        {n:"Lachssteak und Batate",d:"200g Lachs, Suesskartoffel, Brokkoli, Zitronenbutter",k:"~640 kcal",t:["o","p","c","b"]},
+        {n:"Makrelen-Curry",d:"Makrele 200g, Kokosmilch, Ingwer, Spinat, Kichererbsen, Reis",k:"~650 kcal",t:["o","p","b","c"]},
+        {n:"Rindersteak",d:"150g Rindersteak, Ofengemuese, Suesskartoffel, Chimichurri",k:"~590 kcal",t:["p","c","b"]},
+        {n:"Quark-Abend",d:"250g Magerquark, Leinsamen, Walnuesse, Obst - Kasein fuer die Nacht",k:"~380 kcal",t:["p","o","b"]},
+        {n:"Forellen-Pasta",d:"Forelle 200g, Vollkornnudeln 150g, Kraeuter-Olivenoel, Spinat",k:"~640 kcal",t:["o","p","c","b"]},
+        {n:"Haehnchen-Tikka",d:"Haehnchen 200g in Joghurt-Marinade, Vollkornreis, Raita",k:"~610 kcal",t:["p","c","b"]},
+        {n:"Haehnchenbrustrolle",d:"Haehnchen gefuellt mit Feta + Spinat, Quinoa und Tomaten",k:"~580 kcal",t:["p","b","c"]},
+        {n:"Lachs-Risotto",d:"Vollkorn-Risotto 100g, Lachswuerfel, Erbsen, Parmesan",k:"~630 kcal",t:["o","p","c","b"]},
+      ],
+      "Snacks":[
+        {n:"Protein-Riegel selbst",d:"Haferflocken, Datteln, Whey 15g, Mandeln, Chiasamen",k:"~280 kcal",t:["p","c","b","o"]},
+        {n:"Chia-Pudding XL",d:"4 EL Chiasamen, Kokosmilch, Mango, Passionsfrucht",k:"~290 kcal",t:["o","b"]},
+        {n:"Walnuss-Dattel-Schoko",d:"30g Walnuesse + 4 Datteln + 20g dunkle Schokolade >70%",k:"~310 kcal",t:["o","c","b"]},
+        {n:"Joghurt 250g",d:"Griech. Joghurt, Leinsamen, Hanfsamen, Beeren, Kurkuma",k:"~290 kcal",t:["p","o","b"]},
+        {n:"Sardinen auf Cracker",d:"Sardinen (Dose), 4 Vollkorncracker, Zitrone, Petersilie",k:"~250 kcal",t:["o","p","b"]},
+        {n:"Anti-inflamm. Smoothie",d:"Sauerkirschen, Ingwer, Kurkuma, Banane, Mandelmilch",k:"~260 kcal",t:["o","b","c"]},
+        {n:"Lachs-Rice-Cake",d:"2 Reiswaffeln + Frischkaese + 60g Raeucherlachs",k:"~240 kcal",t:["o","p"]},
+        {n:"Mandel-Mango-Mix",d:"25g Mandeln + 1/2 Mango + Kokosflocken",k:"~270 kcal",t:["b","c","o"]},
+      ],
+      "Pre-Workout":[
+        {n:"Grosses Porridge (2h vorher)",d:"130g Hafer + Banane + Honig - vor Berg-/Langeinheit",k:"~510 kcal",t:["c","b","pre"]},
+        {n:"Weissbrot-Marmelade",d:"3 Scheiben Weissbrot + Marmelade - vor Tempotraining",k:"~300 kcal",t:["c","pre"]},
+        {n:"Reiswaffel + Gel",d:"2 Reiswaffeln + 1 Energiegel - direkt vor Intensiveinheit",k:"~220 kcal",t:["c","pre"]},
+        {n:"Haehnchen-Reis (2h vorher)",d:"150g Haehnchen + 100g Reis + Brokkoli",k:"~430 kcal",t:["p","c","pre"]},
+      ],
+      "Post-Workout":[
+        {n:"Whey + Dextrose sofort",d:"Whey 30g + Banane + 300ml Wasser - im 30-Min-Fenster",k:"~310 kcal",t:["p","c","post"]},
+        {n:"Chocolate Milk XL",d:"500ml Schokomilch + 1 Banane - nach 4h+ Einheit",k:"~380 kcal",t:["p","c","post"]},
+        {n:"Lachsbroetchen",d:"Vollkornbroetchen + Raeucherlachs + Frischkaese + Gurke",k:"~360 kcal",t:["o","p","c","post"]},
+        {n:"Quark-Banane-Bowl",d:"250g Quark + 1 Banane + Beeren + Honig",k:"~340 kcal",t:["p","c","b","post"]},
+      ],
+    },
+    omega:[
+      {col:"#185FA5",n:"Lachs 3x/Woche",d:"Anti-entzuendlich bei hohem Trainingsvolumen kritisch"},
+      {col:"#185FA5",n:"Sardinen und Hering",d:"Kleine Fische: weniger Schwermetalle, reich an Omega-3"},
+      {col:"#BA7517",n:"Kohlenhydrat-Periodisierung",d:"Intensivtage: mehr Carbs - Ruhetage: leicht reduziert"},
+      {col:"#1D9E75",n:"Walnuesse + Leinsamen taeglich",d:"Auch in stressreichen Trainingsphasen konsequent"},
+      {col:"#1D9E75",n:"Huelsenfrueche taeglich",d:"Linsen, Bohnen, Kichererbsen - Ballaststoffe + Protein"},
+      {col:"#1D9E75",n:"5 Portionen Gemuese",d:"Bunt essen: Spinat, Brokkoli, Rote Bete, Paprika"},
+    ],
+  },
+  {
+    phase:"Phase 4 - Peak und Wettkampf",col:"#993C1D",protein:152,pgkg:2.0,kcal:3000,fat:83,
+    tip:"Peak-Phase: 2.800-3.200 kcal (je nach Tapering). Wettkampf-Ernaehrung ist Teil des Trainings - nichts Neues am Race Day! Carbo-Loading 2-3 Tage vor Marathon und Oeztaler. Ballaststoffe kurz vor Wettkampf reduzieren.",
+    meals:{
+      "Fruehstueck":[
+        {n:"Race-Day-Fruehstueck",d:"4 Scheiben Weissbrot, Erdnussmus, Honig, Banane, Kaffee - erprobt!",k:"~560 kcal",t:["c","p"]},
+        {n:"Lachs-Ruehrei Ruhetag",d:"3 Eier + 100g Raeucherlachs, Vollkornbrot, Avocado",k:"~520 kcal",t:["o","p","b"]},
+        {n:"Overnight Oats Tapering",d:"Haferflocken, Joghurt, Beeren, Leinsamen, Walnuesse",k:"~480 kcal",t:["p","b","o"]},
+        {n:"Reisbrei herzhaft",d:"Milchreis herzhaft: Lachs, Dill, Gurke, Zitrone",k:"~490 kcal",t:["o","p","c"]},
+        {n:"Porridge Race-Day-Test",d:"100g Hafer, Banane, Honig, Salz - genau wie beim Wettkampf",k:"~420 kcal",t:["c","b"]},
+        {n:"Vollkornbrot und Eier",d:"3 Eier hart, Vollkornbrot, Gurke, Tomate - schlicht und bewaehrt",k:"~430 kcal",t:["p","b","c"]},
+        {n:"Bananen-Pfannkuchen",d:"Weissmehl 100g, 2 Eier, Banane, Honig - leicht verdaulich",k:"~450 kcal",t:["c","p"]},
+        {n:"Muesli leicht",d:"50g Muesli + Joghurt 200g + 1 Banane - magenfreundlich",k:"~420 kcal",t:["c","p"]},
+      ],
+      "Mittagessen":[
+        {n:"Pasta mit Thunfisch",d:"Vollkorn-Spaghetti 150g, Thunfisch, Tomatensauce, Rucola",k:"~590 kcal",t:["o","p","c","b"]},
+        {n:"Haehnchen und Basmatireis",d:"180g Haehnchen, Basmatireis 120g, Brokkoli, Olivenoel",k:"~570 kcal",t:["p","c","b"]},
+        {n:"Lachs-Kartoffel-Pfanne",d:"Lachs 180g, Kartoffeln, Spinat, Roestzwiebeln",k:"~560 kcal",t:["o","p","c","b"]},
+        {n:"Thunfisch-Baguette XL",d:"Vollkornbaguette, Thunfisch 150g, Avocado, Tomate",k:"~580 kcal",t:["o","p","b","c"]},
+        {n:"Pasta-Party (vor Rennen)",d:"Weisse Nudeln 250g trocken, Tomatensauce, Haehnchen",k:"~710 kcal",t:["c","p"]},
+        {n:"Lachs-Risotto",d:"Risotto-Reis 120g, Lachs 150g, Erbsen, Parmesan",k:"~590 kcal",t:["o","p","c"]},
+        {n:"Reis-Haehnchen-Bowl",d:"Basmatireis 150g, Haehnchen 180g, Paprika, Kraeuter",k:"~560 kcal",t:["p","c","b"]},
+        {n:"Makkaroni Bolognese",d:"Weisse Pasta 200g, Rinderhack mager - Carbo-Loading",k:"~640 kcal",t:["p","c"]},
+      ],
+      "Abendessen":[
+        {n:"Pasta-Party Abend",d:"250g weisse Nudeln, Haehnchen-Tomatensauce - Rennen morgen!",k:"~720 kcal",t:["c","p"]},
+        {n:"Lachs und Kartoffeln",d:"200g Lachs, Kartoffeln, Blattsalat, leichtes Dressing",k:"~550 kcal",t:["o","p","c"]},
+        {n:"Haehnchen-Reis simpel",d:"Haehnchen 200g, Weissreis 150g, Karotten - magenfreundlich",k:"~530 kcal",t:["p","c"]},
+        {n:"Recovery-Huehnlersuppe",d:"Huehnerbrue, Gemuese, Nudeln, Salz - nach Marathon",k:"~410 kcal",t:["p","b","c"]},
+        {n:"Gemuese-Haehnchen",d:"Haehnchen 180g, Brokkoli, Karotten, Suesskartoffel",k:"~520 kcal",t:["p","b","c"]},
+        {n:"Lachssteak Tapering",d:"200g Lachs, Quinoa 80g, Spinat - anti-entzuendlich",k:"~560 kcal",t:["o","p","b","c"]},
+        {n:"Pasta aglio e olio",d:"Weisse Pasta 200g, Olivenoel, Knoblauch, Parmesan",k:"~610 kcal",t:["c"]},
+        {n:"Kabeljau und Reis",d:"200g Kabeljau, Basmatireis, Karotten - magenfreundlich",k:"~490 kcal",t:["p","c"]},
+      ],
+      "Snacks":[
+        {n:"Banane und Reiswaffel",d:"Race-Day-erprobt: 1 Banane + 2 Reiswaffeln",k:"~190 kcal",t:["c"]},
+        {n:"Gel-Training",d:"Energiegele erproben - immer mit Wasser nehmen!",k:"~100 kcal",t:["c"]},
+        {n:"Quark und Beeren",d:"200g Quark, Beeren, Honig - Kasein fuer Regeneration",k:"~220 kcal",t:["p","b"]},
+        {n:"Walnuesse und Schoko",d:"30g Walnuesse + 2 Stuecke dunkle Schokolade >70%",k:"~240 kcal",t:["o","b"]},
+        {n:"Sauerkirsch-Smoothie",d:"Montmorency-Kirschen, Banane, Ingwer - reduziert Muskelkater",k:"~230 kcal",t:["b","c"]},
+        {n:"Reiswaffel und Erdnussmus",d:"3 Reiswaffeln + Erdnussmus - Race-Day-Snack erprobt",k:"~250 kcal",t:["c","p"]},
+        {n:"Sportriegel (erprobt)",d:"Nur bereits im Training verwendete Riegel!",k:"~200 kcal",t:["c"]},
+        {n:"Salzstangen und Wasser",d:"20 Salzstangen vor/nach langen Einheiten - Elektrolyte",k:"~100 kcal",t:["c"]},
+      ],
+      "Pre-Workout":[
+        {n:"Marathon - Fruehstueck (3h vorher)",d:"Weissbrot, Erdnussmus, Honig, Banane, Kaffee, 500ml Wasser",k:"~560 kcal",t:["c","p","pre"]},
+        {n:"Oeztaler - Fruehstueck (4h vorher)",d:"Porridge 130g + Banane + Kaffee + Elektrolyte - Start 06:30!",k:"~520 kcal",t:["c","b","pre"]},
+        {n:"Carbo-Loading Tag 1-2",d:"70% Carbs: Pasta, Reis, Weissbrot. Ballaststoffe reduzieren!",k:"~800 kcal",t:["c","pre"]},
+        {n:"Zwischen-Gel unterwegs",d:"Alle 30 Min (Marathon) / 20 Min (Oeztaler) - nie ins Defizit!",k:"~100 kcal",t:["c","pre"]},
+      ],
+      "Post-Workout":[
+        {n:"Marathon Recovery Tag 1",d:"Proteinreich: Lachs, Eier, Huehnchen + Antioxidantien",k:"~600 kcal",t:["p","o","b","post"]},
+        {n:"Oeztaler Recovery",d:"Massiv: Protein + Carbs + Anti-Entzuendung (Lachs, Beeren)",k:"~700 kcal",t:["p","c","o","b","post"]},
+        {n:"Chocolate Milk sofort",d:"500ml Schokomilch direkt nach Zieleinlauf",k:"~350 kcal",t:["p","c","post"]},
+        {n:"Huehnlersuppe am Abend",d:"Warm, salzig, naehrstoffreich - Klassiker der Regeneration",k:"~350 kcal",t:["p","b","post"]},
+      ],
+    },
+    omega:[
+      {col:"#185FA5",n:"Lachs 3x/Woche",d:"Anti-entzuendlich - besonders wichtig in Peak-Phase"},
+      {col:"#185FA5",n:"Omega-3 Kapseln opt.",d:"2-3g EPA+DHA/Tag als Ergaenzung beim Tapering"},
+      {col:"#993C1D",n:"Nichts Neues am Race Day",d:"Alles muss vorher im Training erprobt sein"},
+      {col:"#1D9E75",n:"Ballaststoffe reduzieren",d:"3 Tage vor Wettkampf: weniger Rohkost und Huelsenfrueche"},
+      {col:"#1D9E75",n:"Kurkuma + Ingwer taeglich",d:"Anti-entzuendlich, hilft Regeneration in Tapering-Phase"},
+      {col:"#BA7517",n:"Sauerkirschen",d:"Belegt: reduziert Muskelkater und Entzuendungsmarker"},
+    ],
+  }
+];
+
+const TM={o:{l:"Omega-3",c:"rt-o"},b:{l:"Ballaststoffe",c:"rt-b"},p:{l:"Protein",c:"rt-p"},c:{l:"Kohlenhydrate",c:"rt-c"},pre:{l:"Pre-Workout",c:"rt-pre"},post:{l:"Post-Workout",c:"rt-post"}};
+
+function switchPanel(p){
+  document.querySelectorAll('.panel').forEach(el=>el.classList.remove('active'));
+  document.getElementById('panel-'+p).classList.add('active');
+  document.querySelectorAll('.npill').forEach((b,i)=>b.classList.toggle('active',['training','ern'][i]===p));
+}
+
+let cEP=0,cEM=0;
+function selEP(i){
+  cEP=i;cEM=0;
+  document.querySelectorAll('#ePhaseRow .ppill').forEach((c,idx)=>{
+    c.classList.toggle('active',idx===i);
+    if(idx===i){c.style.background=EP[i].col;c.style.borderColor=EP[i].col;c.style.color='#fff';}
+    else{c.style.background='';c.style.borderColor='';c.style.color='';}
+  });
+  renderEP();
+}
+function selEM(i){
+  cEM=i;
+  document.querySelectorAll('.mtab').forEach((t,idx)=>t.classList.toggle('active',idx===i));
+  renderRecipes();
+}
+function renderEP(){
+  const d=EP[cEP];
+  const protPct=Math.round(d.protein*4/d.kcal*100);
+  const fatPct=Math.round(d.fat*9/d.kcal*100);
+  const carbPct=100-protPct-fatPct;
+  const carbG=Math.round(d.kcal*carbPct/100/4);
+  document.getElementById('eStats').innerHTML=`
+    <div class="stat"><div class="stat-label">Protein / Tag</div><div class="stat-val" style="color:${d.col}">${d.protein}g</div><div class="stat-sub">${d.pgkg}g / kg &middot; 76 kg</div></div>
+    <div class="stat"><div class="stat-label">Kalorien / Tag</div><div class="stat-val" style="color:${d.col}">${d.kcal.toLocaleString('de-DE')}</div><div class="stat-sub">kcal</div></div>
+    <div class="stat"><div class="stat-label">Kohlenhydrate</div><div class="stat-val" style="color:${d.col}">${carbG}g</div><div class="stat-sub">${carbPct}% der Energie</div></div>
+    <div class="stat"><div class="stat-label">Fett / Tag</div><div class="stat-val" style="color:${d.col}">${d.fat}g</div><div class="stat-sub">${fatPct}% der Energie</div></div>`;
+  document.getElementById('eMacros').innerHTML=[
+    {l:`Protein &middot; ${d.protein}g`,pct:protPct,col:"#BA7517"},
+    {l:`Kohlenhydrate &middot; ${carbG}g`,pct:carbPct,col:d.col},
+    {l:`Fett &middot; ${d.fat}g`,pct:fatPct,col:"#3B6D11"},
+  ].map(b=>`<div class="mrow"><div class="mlabel">${b.l}</div><div class="mtrack"><div class="mfill" style="width:${b.pct}%;background:${b.col}"></div></div><div class="mpct">${b.pct}%</div></div>`).join('');
+  document.getElementById('eMealTabs').innerHTML=Object.keys(d.meals).map((m,i)=>
+    `<button class="mtab${i===0?' active':''}" onclick="selEM(${i})">${m}</button>`).join('');
+  renderRecipes();
+  document.getElementById('eOmega').innerHTML=d.omega.map(o=>`
+    <div class="oitem"><div class="odot" style="background:${o.col}"></div><div class="otext"><strong>${o.n}</strong>${o.d}</div></div>`).join('');
+  document.getElementById('eTip').style.borderColor=d.col;
+  document.getElementById('eTip').textContent=d.tip;
+}
+function renderRecipes(){
+  const d=EP[cEP];
+  const mk=Object.keys(d.meals)[cEM];
+  document.getElementById('eRecipes').innerHTML=(d.meals[mk]||[]).map(v=>`
+    <div class="rcard" style="border-color:${d.col}">
+      <div class="rcard-name">${v.n}</div>
+      <div class="rcard-desc">${v.d}</div>
+      <div class="rcard-kcal">${v.k}</div>
+      <div class="rtags">${v.t.map(t=>`<span class="rtag ${TM[t].c}">${TM[t].l}</span>`).join('')}</div>
+    </div>`).join('');
+}
+
+document.getElementById('ePhaseRow').innerHTML=EP.map((d,i)=>`
+  <div class="ppill${i===0?' active':''}"
+    style="${i===0?'background:'+d.col+';border-color:'+d.col+';color:#fff':''}"
+    onclick="selEP(${i})">${d.phase}</div>`).join('');
+renderEP();
+</script>
+</body>
+</html>
