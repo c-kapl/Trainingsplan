@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trainingsplan – Detailliert</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #f7f5f0;
+  --bg2: #ffffff;
+  --bg3: #f0ede6;
+  --border: #e4e1da;
+  --text: #1a1916;
+  --text2: #6a6860;
+  --text3: #9a9890;
+  --teal: #1D9E75; --teal-bg: #dff5ec; --teal-dark: #0a5a44;
+  --blue: #185FA5; --blue-bg: #deedfb; --blue-dark: #0c3d6e;
+  --amber: #BA7517; --amber-bg: #faecd8; --amber-dark: #7a4609;
+  --coral: #993C1D; --coral-bg: #fae8e0; --coral-dark: #6b2a12;
+  --r: 14px; --rs: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); padding: 20px 16px 40px; font-size: 14px; line-height: 1.5; }
+
+h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.4px; margin-bottom: 2px; }
+.sub { font-size: 13px; color: var(--text3); margin-bottom: 20px; }
+
+/* Phase selector */
+.phase-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.ppill {
+  padding: 8px 16px; border-radius: 30px;
+  border: 1px solid var(--border); background: var(--bg2);
+  font-size: 13px; font-weight: 500; color: var(--text2);
+  cursor: pointer; transition: all 0.18s; white-space: nowrap;
+}
+.ppill:hover { border-color: #b0aea6; color: var(--text); }
+.ppill.active { color: #fff; border-color: transparent; }
+
+/* Tab row (days) */
+.day-tabs { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; margin-bottom: 16px; }
+.day-tabs::-webkit-scrollbar { display: none; }
+.dtab {
+  flex-shrink: 0; padding: 7px 14px; border-radius: 30px;
+  border: 1px solid var(--border); background: var(--bg2);
+  font-size: 12px; font-weight: 500; color: var(--text2);
+  cursor: pointer; transition: all 0.15s;
+}
+.dtab:hover { border-color: #b0aea6; }
+.dtab.active { color: #fff; border-color: transparent; }
+.dtab.t-lauf.active  { background: var(--teal); }
+.dtab.t-rad.active   { background: var(--blue); }
+.dtab.t-kraft.active { background: var(--amber); }
+.dtab.t-regen.active { background: #7a7870; }
+.dtab.t-kombi.active { background: #8a3560; }
+
+/* Card */
+.card { background: var(--bg2); border-radius: var(--r); border: 0.5px solid var(--border); padding: 16px 18px; margin-bottom: 12px; }
+.card-label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 12px; }
+
+/* Day header */
+.day-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.day-badge { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 20px; }
+.day-title { font-size: 17px; font-weight: 600; }
+.day-duration { font-size: 12px; color: var(--text3); font-family: 'DM Mono', monospace; }
+
+/* Section within day */
+.section { margin-bottom: 16px; }
+.section-title {
+  font-size: 12px; font-weight: 600; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin-bottom: 8px; padding-bottom: 6px;
+  border-bottom: 0.5px solid var(--border);
+}
+
+/* Exercise rows */
+.ex-list { display: flex; flex-direction: column; gap: 6px; }
+.ex {
+  display: flex; align-items: flex-start;
+  background: var(--bg3); border-radius: var(--rs);
+  padding: 10px 12px; gap: 10px;
+}
+.ex-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.ex-body { flex: 1; }
+.ex-name { font-size: 13px; font-weight: 500; color: var(--text); }
+.ex-detail { font-size: 12px; color: var(--text2); margin-top: 2px; line-height: 1.4; }
+.ex-badge {
+  font-size: 11px; font-weight: 600; padding: 3px 9px;
+  border-radius: 20px; flex-shrink: 0; align-self: flex-start;
+  font-family: 'DM Mono', monospace;
+}
+
+/* Zone pill */
+.zone-pill {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  padding: 2px 10px; border-radius: 20px; margin-bottom: 10px;
+}
+
+/* Info box */
+.info-box {
+  background: var(--bg3); border-radius: var(--rs);
+  padding: 10px 12px; font-size: 12px; color: var(--text2);
+  line-height: 1.55; border-left: 2px solid var(--accent, #ccc);
+  margin-top: 4px;
+}
+
+/* Regen day */
+.regen-list { display: flex; flex-direction: column; gap: 6px; }
+.regen-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text2); }
+.regen-item::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--text3); flex-shrink: 0; }
+
+/* Progress bar */
+.prog-bar { height: 5px; border-radius: 4px; background: var(--border); margin-top: 6px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 4px; }
+
+/* Metric chips */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.chip { background: var(--bg3); border-radius: 20px; padding: 5px 12px; font-size: 12px; font-weight: 500; color: var(--text2); }
+.chip span { font-family: 'DM Mono', monospace; color: var(--text); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>Trainingsplan – Detailliert</h1>
+<p class="sub">Übungen · Distanzen · Sätze pro Einheit · 4 Tage / Woche</p>
+
+<div class="phase-row" id="phaseRow"></div>
+<div class="day-tabs" id="dayTabs"></div>
+<div id="dayContent"></div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+
+const phases = [
+  // ══════════════════════════════════════════════
+  // PHASE 1 – FUNDAMENT (Monat 1–6)
+  // ══════════════════════════════════════════════
+  {
+    id: 0, label: "Phase 1", sub: "Fundament", months: "Monat 1–6", col: "#1D9E75",
+    chips: [
+      {l:"Laufen / Wo", v:"20–35 km"},
+      {l:"Rad / Wo", v:"60–100 km"},
+      {l:"Kraft", v:"Bodyweight"},
+      {l:"HF-Ziel", v:"Zone 2"},
+    ],
+    days: [
+      {
+        name: "Montag", short:"Mo", type:"regen",
+        title:"Aktive Erholung & Dehnung",
+        duration:"30–45 Min",
+        badge:{bg:"#f0ede6", col:"#6a6860", label:"Regeneration"},
+        sections:[
+          {
+            title:"Morgen-Mobilität (täglich empfohlen)",
+            exercises:[
+              {icon:"🔄", name:"Hüftkreise", detail:"Je 10× vor und rückwärts, stehend", badge:"2 × 10", bg:"#f0ede6", bc:"#9a9890"},
+              {icon:"🦵", name:"Hüftbeuger-Dehnung (Couch Stretch)", detail:"Knie auf Boden, Oberkörper aufrecht – 45 Sek. pro Seite", badge:"2 × 45s", bg:"#f0ede6", bc:"#9a9890"},
+              {icon:"🔁", name:"Cat-Cow (Wirbelsäulen-Mobilisation)", detail:"Langsam, mit Atemrhythmus – wichtig für Rückengesundheit", badge:"2 × 10", bg:"#f0ede6", bc:"#9a9890"},
+              {icon:"🧘", name:"Pigeon Pose (Hüftöffner)", detail:"Pro Seite 60 Sek. halten, tief atmen", badge:"2 × 60s", bg:"#f0ede6", bc:"#9a9890"},
+              {icon:"🦶", name:"Waden-Dehnung an der Wand", detail:"Gerade Knie + leicht gebeugt – je 30 Sek.", badge:"2 × 30s", bg:"#f0ede6", bc:"#9a9890"},
+              {icon:"💪", name:"Thoraxrotation (liegend)", detail:"Seitenlage, oberen Arm zur anderen Seite – BWS mobilisieren", badge:"2 × 8", bg:"#f0ede6", bc:"#9a9890"},
+            ]
+          }
+        ],
+        info:{col:"#9a9890", text:"Dieser Tag ist bewusst leer von Belastung. Dehnung & Mobilisation sind kein 'Bonus' – sie sind Training. Rückenprobleme entstehen oft durch Verkürzungen von Hüftbeuger und BWS-Steifigkeit."}
+      },
+      {
+        name:"Dienstag", short:"Di", type:"lauf",
+        title:"Lockerer Grundlagen-Lauf",
+        duration:"35–55 Min",
+        badge:{bg:"#dff5ec", col:"#0a5a44", label:"Laufen"},
+        sections:[
+          {
+            title:"Aufwärmen (5 Min)",
+            exercises:[
+              {icon:"🚶", name:"Flott gehen", detail:"5 Min zügiges Gehen – Herzfrequenz sanft anheben", badge:"5 Min", bg:"#dff5ec", bc:"#1D9E75"},
+              {icon:"🦵", name:"Lauf-ABC (Kniehebelauf, Anfersen)", detail:"Je 2 × 20 m – Laufökonomie trainieren", badge:"2 × 20m", bg:"#dff5ec", bc:"#1D9E75"},
+            ]
+          },
+          {
+            title:"Hauptteil – Zone 2 Lauf",
+            exercises:[
+              {icon:"🏃", name:"Monat 1–2: Lauf 25–30 Min", detail:"Tempo: du kannst dich vollständig unterhalten. HF: 120–142 bpm. Pace ca. 6:30–7:30 / km", badge:"25–30 Min", bg:"#dff5ec", bc:"#1D9E75"},
+              {icon:"🏃", name:"Monat 3–4: Lauf 35–40 Min", detail:"Gleiches Tempo, längere Dauer. Distanz ca. 5–6 km. HF konsequent unter 142 bpm", badge:"35–40 Min", bg:"#dff5ec", bc:"#1D9E75"},
+              {icon:"🏃", name:"Monat 5–6: Lauf 45–50 Min", detail:"Distanz ca. 7–8 km. Wenn HF stabil bleibt, Pace minimal steigern auf ~6:00 / km", badge:"45–50 Min", bg:"#dff5ec", bc:"#1D9E75"},
+            ]
+          },
+          {
+            title:"Auslaufen & Dehnen (5 Min)",
+            exercises:[
+              {icon:"🚶", name:"Auslaufen gehen", detail:"3 Min langsames Gehen, Puls senken", badge:"3 Min", bg:"#dff5ec", bc:"#1D9E75"},
+              {icon:"🧘", name:"Stehende Quadrizeps-Dehnung", detail:"Je 30 Sek. pro Seite", badge:"2 × 30s", bg:"#dff5ec", bc:"#1D9E75"},
+            ]
+          }
+        ],
+        info:{col:"#1D9E75", text:"Zone 2 fühlt sich zu langsam an – das ist normal und richtig. Wenn HF über 145 steigt: laufen/gehen kombinieren. Kein Ego-Training in Phase 1."}
+      },
+      {
+        name:"Mittwoch", short:"Mi", type:"kraft",
+        title:"Kraft & Rumpf (Bodyweight + Bänder)",
+        duration:"45–55 Min",
+        badge:{bg:"#faecd8", col:"#7a4609", label:"Kraft / Rumpf"},
+        sections:[
+          {
+            title:"Aktivierung (8 Min)",
+            exercises:[
+              {icon:"🔥", name:"Glute Bridge", detail:"Hüfte hoch drücken, Gesäß oben anspannen – 2 Sek. halten. Rücken flach!", badge:"3 × 15", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🔥", name:"Clamshell mit Widerstandsband", detail:"Seitenlage, Band über Knien, oberes Knie öffnen – Gluteus medius aktivieren", badge:"3 × 15", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🔥", name:"Dead Bug", detail:"Rücken flach, Lendenwirbel am Boden, abwechselnd Arm+Bein strecken. LANGSAM.", badge:"3 × 8", bg:"#faecd8", bc:"#BA7517"},
+            ]
+          },
+          {
+            title:"Kraft-Hauptteil",
+            exercises:[
+              {icon:"💪", name:"Bodyweight Squat", detail:"Füße schulterbreit, Knie über Zehen, Rücken gerade. Monat 1–2: langsam + kontrolliert", badge:"3 × 12", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"💪", name:"Reverse Lunge (rückwärts Ausfallschritt)", detail:"Rumpf stabil, Knie berührt nicht den Boden. Schonender für Knie als vorwärts", badge:"3 × 10", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"💪", name:"Push-Up (knie- oder zehen-gestützt)", detail:"Körper als Brett, Ellbogen 45° zum Körper. Rumpf aktiv halten", badge:"3 × 8–12", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"💪", name:"Band-Row (sitzend mit Band)", detail:"Band um Füße, aufrecht sitzen, Schulterblätter zusammenziehen – Gegenmuskeln zum Radfahren", badge:"3 × 12", bg:"#faecd8", bc:"#BA7517"},
+            ]
+          },
+          {
+            title:"Rumpf-Block (Rücken-Fokus)",
+            exercises:[
+              {icon:"🧱", name:"Plank (Unterarmstütz)", detail:"Körper gerade wie ein Brett. Becken nicht heben oder absenken. Atmen!", badge:"3 × 30s", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🧱", name:"Bird-Dog", detail:"Vierfüßler, gegenüberliegendes Arm+Bein strecken – 3 Sek. halten. Hüfte stabil.", badge:"3 × 8", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🧱", name:"Superman (Rückenstrecker)", detail:"Bauchlage, Arme und Beine gleichzeitig heben – tief im unteren Rücken spüren", badge:"3 × 10", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🧱", name:"Side Plank", detail:"Seitlicher Unterarmstütz, Hüfte hebt. Monat 1–2: Knie abgestützt ok", badge:"3 × 20s", bg:"#faecd8", bc:"#BA7517"},
+            ]
+          }
+        ],
+        info:{col:"#BA7517", text:"Ab Monat 4: Widerstandsband beim Squat und Lunge einsetzen. Ab Monat 7 (Kraftraum): Goblet Squat, Romanian Deadlift und Barbell-Arbeit einführen."}
+      },
+      {
+        name:"Donnerstag", short:"Do", type:"regen",
+        title:"Aktive Regeneration / Mobilität",
+        duration:"20–30 Min",
+        badge:{bg:"#f0ede6", col:"#6a6860", label:"Regeneration"},
+        sections:[
+          {
+            title:"Optionale leichte Aktivität",
+            exercises:[
+              {icon:"🚶", name:"Spaziergang", detail:"15–20 Min lockeres Gehen – fördert Durchblutung ohne neue Belastung", badge:"20 Min", bg:"#f0ede6", bc:"#9a9890"},
+              {icon:"🧘", name:"Foam Rolling (falls vorhanden)", detail:"Waden, IT-Band, Brustwirbelsäule – je 60 Sek. pro Zone", badge:"10 Min", bg:"#f0ede6", bc:"#9a9890"},
+            ]
+          }
+        ],
+        info:{col:"#9a9890", text:"Donnerstag bleibt leicht. Wenn du müde bist: komplett ruhen. Regeneration ist Training."}
+      },
+      {
+        name:"Freitag", short:"Fr", type:"rad",
+        title:"Grundlagen-Radausfahrt",
+        duration:"60–120 Min",
+        badge:{bg:"#deedfb", col:"#154e8a", label:"Radfahren"},
+        sections:[
+          {
+            title:"Einfahren (10 Min)",
+            exercises:[
+              {icon:"🚴", name:"Einfahren sehr locker", detail:"Flaches Gelände, ganz lockers Treten – Muskeln aufwärmen, HF unter 120 bpm", badge:"10 Min", bg:"#deedfb", bc:"#185FA5"},
+            ]
+          },
+          {
+            title:"Hauptteil – Zone 2 Ausdauer",
+            exercises:[
+              {icon:"🚴", name:"Monat 1–2: 50–60 Min Ausfahrt", detail:"Flach, Zone 2 (120–142 bpm), Kadenz 80–90 rpm. Pace ca. 20–22 km/h. Distanz: ~20–25 km", badge:"50–60 Min", bg:"#deedfb", bc:"#185FA5"},
+              {icon:"🚴", name:"Monat 3–4: 75–90 Min Ausfahrt", detail:"Erste leichte Hügel ok. HF darf bei Anstiegen kurz auf 150 – danach wieder Zone 2. Distanz: ~30–40 km", badge:"75–90 Min", bg:"#deedfb", bc:"#185FA5"},
+              {icon:"🚴", name:"Monat 5–6: 90–120 Min Ausfahrt", detail:"Kadenz-Fokus: 85–95 rpm bewusst halten. Distanz: ~40–50 km. Schnitt 22–24 km/h anstreben", badge:"90–120 Min", bg:"#deedfb", bc:"#185FA5"},
+            ]
+          },
+          {
+            title:"Ausfahren & Kadenz-Drill",
+            exercises:[
+              {icon:"🔁", name:"Kadenz-Intervalle (Monat 3+)", detail:"3 × 2 Min bei 95–100 rpm im leichten Gang – Trittrundheit trainieren", badge:"3 × 2 Min", bg:"#deedfb", bc:"#185FA5"},
+              {icon:"🚴", name:"Ausfahren", detail:"10 Min sehr locker, ganz lockeres Treten", badge:"10 Min", bg:"#deedfb", bc:"#185FA5"},
+            ]
+          }
+        ],
+        info:{col:"#185FA5", text:"Kadenz ist wichtiger als Geschwindigkeit. 80–90 rpm schont die Knie und schult das neuromuskuläre System für den Ötztaler (5.500 Hm bedeuten stundenlanges Treten)."}
+      },
+      {
+        name:"Samstag", short:"Sa", type:"kombi",
+        title:"Kombi: Lauf + Rumpf",
+        duration:"60–75 Min",
+        badge:{bg:"#fbe8f0", col:"#8a2e52", label:"Kombi"},
+        sections:[
+          {
+            title:"Lauf-Teil (40–50 Min)",
+            exercises:[
+              {icon:"🏃", name:"Monat 1–2: 30–35 Min Zone 2", detail:"Wie Dienstag – zweiter lockerer Lauf der Woche. Distanz: 4–5 km", badge:"30–35 Min", bg:"#fbe8f0", bc:"#8a2e52"},
+              {icon:"🏃", name:"Monat 3–4: 40–45 Min Zone 2", detail:"Distanz: 6–7 km. Pace stabil halten, HF-Monitoring", badge:"40–45 Min", bg:"#fbe8f0", bc:"#8a2e52"},
+              {icon:"🏃", name:"Monat 5–6: 45–50 Min Zone 2", detail:"Distanz: 7–8 km. Gel/Riegel ab 40 Min testen – Magentraining beginnen", badge:"45–50 Min", bg:"#fbe8f0", bc:"#8a2e52"},
+            ]
+          },
+          {
+            title:"Rumpf-Finish (15–20 Min direkt nach Lauf)",
+            exercises:[
+              {icon:"🧱", name:"Glute Bridge mit Band", detail:"Band über Knie, 2 Sek. oben halten – Ermüdungstoleranz trainieren", badge:"3 × 15", bg:"#fbe8f0", bc:"#8a2e52"},
+              {icon:"🧱", name:"Plank-Variante", detail:"Wechsel: Unterarm-Plank → Seitstütz → Unterarm-Plank. Kein Innehalten.", badge:"3 Runden", bg:"#fbe8f0", bc:"#8a2e52"},
+              {icon:"🧱", name:"Bird-Dog mit Pause", detail:"3 Sek. halten, kontrolliert zurück. Nach dem Lauf schwerer – genau richtig.", badge:"3 × 8", bg:"#fbe8f0", bc:"#8a2e52"},
+            ]
+          }
+        ],
+        info:{col:"#8a2e52", text:"Rumpfübungen nach dem Lauf zu machen simuliert Wettkampfermüdung und baut Rumpfstabilität unter Belastung auf – genau das, was du im Marathon-Endspurt brauchst."}
+      },
+      {
+        name:"Sonntag", short:"So", type:"regen",
+        title:"Komplett-Ruhetag",
+        duration:"—",
+        badge:{bg:"#f0ede6", col:"#6a6860", label:"Regeneration"},
+        sections:[
+          {
+            title:"Was heute zählt",
+            exercises:[
+              {icon:"😴", name:"Schlafen (8–9 Stunden)", detail:"Wichtigste Regenerationsmaßnahme. Muskelaufbau findet im Schlaf statt.", badge:"Priorität 1", bg:"#f0ede6", bc:"#9a9890"},
+              {icon:"🍽️", name:"Essen & Trinken", detail:"Kohlenhydrate & Protein nach Training vom Samstag nachfüllen. 2–3 L Wasser.", badge:"Priorität 2", bg:"#f0ede6", bc:"#9a9890"},
+              {icon:"🦶", name:"Optionales Dehnen", detail:"Nur wenn du Lust hast – nie mit Schmerzen", badge:"Optional", bg:"#f0ede6", bc:"#9a9890"},
+            ]
+          }
+        ],
+        info:{col:"#9a9890", text:"Kein Training. Kein schlechtes Gewissen. Sonntag ist genauso wichtig wie der härteste Trainingstag."}
+      },
+    ]
+  },
+
+  // ══════════════════════════════════════════════
+  // PHASE 2 – AUFBAU (Monat 7–12)
+  // ══════════════════════════════════════════════
+  {
+    id:1, label:"Phase 2", sub:"Aufbau", months:"Monat 7–12", col:"#185FA5",
+    chips:[
+      {l:"Laufen / Wo", v:"35–55 km"},
+      {l:"Rad / Wo", v:"100–180 km"},
+      {l:"Kraft", v:"Kraftraum ab M9"},
+      {l:"HF-Ziel", v:"Z2 + Z3-Einschübe"},
+    ],
+    days:[
+      {
+        name:"Montag", short:"Mo", type:"regen",
+        title:"Yoga / Mobilität",
+        duration:"30–45 Min",
+        badge:{bg:"#f0ede6", col:"#6a6860", label:"Regeneration"},
+        sections:[{
+          title:"Yoga-Sequenz für Ausdauersportler",
+          exercises:[
+            {icon:"🧘", name:"Sonnengruß A (3×)", detail:"Langsam, Atemrhythmus. Wärmt gesamten Körper auf.", badge:"3 Runden", bg:"#f0ede6", bc:"#9a9890"},
+            {icon:"🧘", name:"Lizard Pose (Eidechse)", detail:"Tiefer Ausfallschritt, Hände innen – intensive Hüftbeuger-Dehnung. 60 Sek./Seite", badge:"2 × 60s", bg:"#f0ede6", bc:"#9a9890"},
+            {icon:"🧘", name:"Pigeon Pose", detail:"60–90 Sek. pro Seite. Hier liegt oft das Problem bei Rückenschmerzen.", badge:"2 × 90s", bg:"#f0ede6", bc:"#9a9890"},
+            {icon:"🔄", name:"Thoraxrotation (sitzend)", detail:"Überkreuz-Rotation, Arme ausgestreckt – BWS mobilisieren", badge:"2 × 10", bg:"#f0ede6", bc:"#9a9890"},
+          ]
+        }],
+        info:{col:"#9a9890", text:"Ab Phase 2 steigt Volumen stark an. Montag als Mobilitätstag ist nicht verhandelbar."}
+      },
+      {
+        name:"Dienstag", short:"Di", type:"lauf",
+        title:"Lockerer Lauf + optionale Strides",
+        duration:"50–65 Min",
+        badge:{bg:"#dff5ec", col:"#0a5a44", label:"Laufen"},
+        sections:[
+          {
+            title:"Aufwärmen",
+            exercises:[
+              {icon:"🚶", name:"Gehen → Einlaufen", detail:"5 Min gehen, dann 5 Min sehr locker laufen", badge:"10 Min", bg:"#dff5ec", bc:"#1D9E75"},
+            ]
+          },
+          {
+            title:"Hauptteil",
+            exercises:[
+              {icon:"🏃", name:"Monat 7–8: 40–45 Min Zone 2", detail:"Pace ca. 6:00–7:00 / km. Distanz: 7–9 km. HF konsequent 120–142 bpm", badge:"40–45 Min", bg:"#dff5ec", bc:"#1D9E75"},
+              {icon:"🏃", name:"Monat 9–10: 45–50 Min Zone 2", detail:"Distanz: 8–10 km. Laufen beginnt sich natürlicher anzufühlen.", badge:"45–50 Min", bg:"#dff5ec", bc:"#1D9E75"},
+              {icon:"🏃", name:"Monat 11–12: 50–55 Min Zone 2", detail:"Distanz: 9–11 km. Pace nähert sich 5:30–6:00 / km bei gleichem HF-Niveau.", badge:"50–55 Min", bg:"#dff5ec", bc:"#1D9E75"},
+            ]
+          },
+          {
+            title:"Strides (ab Monat 9 optional)",
+            exercises:[
+              {icon:"⚡", name:"4–6 × Strides (100 m)", detail:"Locker beschleunigen auf ~85% – nicht sprinten. 90 Sek. Pause. Beine 'wachrütteln'.", badge:"4–6 × 100m", bg:"#dff5ec", bc:"#1D9E75"},
+            ]
+          }
+        ],
+        info:{col:"#1D9E75", text:"Strides trainieren Laufökonomie ohne Ermüdung. In Zone 2 zu bleiben wird jetzt einfacher – das aerobe System adaptiert."}
+      },
+      {
+        name:"Mittwoch", short:"Mi", type:"kraft",
+        title:"Krafttraining (Monat 7–8: Matte / ab Monat 9: Kraftraum)",
+        duration:"55–65 Min",
+        badge:{bg:"#faecd8", col:"#7a4609", label:"Kraft / Rumpf"},
+        sections:[
+          {
+            title:"Monat 7–8: Fortgeschrittenes Bodyweight",
+            exercises:[
+              {icon:"💪", name:"Bulgarian Split Squat (mit Band)", detail:"Hinteres Bein auf Stuhl/Sofa. Rumpf gerade, Knie über Fuß. Fordernder als normaler Lunge", badge:"3 × 10", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"💪", name:"Single-Leg Glute Bridge", detail:"Ein Bein gestreckt, Hüfte hoch – deutlich schwerer. Rücken bleibt flach.", badge:"3 × 12", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"💪", name:"Push-Up Varianten", detail:"Enge Arme, weite Arme, langsam runter (4 Sek.). Körperspannung!", badge:"4 × 10", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🧱", name:"Copenhagen Plank (mit Stuhl)", detail:"Seitlicher Stütz, oberes Bein auf Stuhl. Intensivster Adduktoren-Schutz für Läufer", badge:"3 × 20s", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🧱", name:"Pallof Press mit Band", detail:"Band auf Höhe Bauch, Arme strecken und halten – Anti-Rotation, perfekt für Rücken", badge:"3 × 10", bg:"#faecd8", bc:"#BA7517"},
+            ]
+          },
+          {
+            title:"Ab Monat 9: Kraftraum-Einheiten",
+            exercises:[
+              {icon:"🏋️", name:"Goblet Squat", detail:"Kurzhantel / Kettlebell vor Brust. Tiefer Squat, Rücken gerade. Ideal als Einstieg.", badge:"4 × 10", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🏋️", name:"Romanian Deadlift (RDL)", detail:"Rückenfreundlichste Deadlift-Variante. Stange nahe am Körper, Hüfte zurück. KEIN Rundrücken.", badge:"4 × 8", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🏋️", name:"Seated Cable Row", detail:"Schulterblätter zusammenziehen – wichtig als Gegenbewegung zur Radfahrerhaltung", badge:"3 × 12", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🏋️", name:"Hip Thrust an der Bank", detail:"Stange über Hüfte, Oberkörper auf Bank. Stärkste Gesäßübung – Lauf & Rad profitieren enorm", badge:"4 × 10", bg:"#faecd8", bc:"#BA7517"},
+              {icon:"🧱", name:"Hanging Knee Raise / Ab-Rollout", detail:"Rumpf unter Zusatzlast – transferiert direkt in Laufhaltung", badge:"3 × 12", bg:"#faecd8", bc:"#BA7517"},
+            ]
+          }
+        ],
+        info:{col:"#BA7517", text:"Kraftraum ab Monat 9: Starte mit leichtem Gewicht und perfekter Technik. Rücken: RDL ist deine wichtigste Übung – stärkt alle Strukturen, die bei Rückenproblemen schwach sind."}
+      },
+      {
+        name:"Donnerstag", short:"Do", type:"rad",
+        title:"Rad-Intervalltraining",
+        duration:"60–75 Min",
+        badge:{bg:"#deedfb", col:"#154e8a", label:"Radfahren"},
+        sections:[
+          {
+            title:"Einfahren",
+            exercises:[
+              {icon:"🚴", name:"Sehr locker einfahren", detail:"15 Min Zone 1, Kadenz 80–90 rpm, flach", badge:"15 Min", bg:"#deedfb", bc:"#185FA5"},
+            ]
+          },
+          {
+            title:"Intervall-Block (ab Monat 8)",
+            exercises:[
+              {icon:"⚡", name:"Monat 7: Tempo-Wechsel", detail:"5 × 3 Min bei Zone 3 (143–157 bpm), dann 3 Min Zone 1. Erste Intensität!", badge:"5 × 3 Min", bg:"#deedfb", bc:"#185FA5"},
+              {icon:"⚡", name:"Monat 9–10: Sweet-Spot Intervalle", detail:"4 × 8 Min bei ca. 88% HFmax (oberes Zone 3). 4 Min Pause. Ötztaler-Vorbereitung!", badge:"4 × 8 Min", bg:"#deedfb", bc:"#185FA5"},
+              {icon:"⚡", name:"Monat 11–12: Bergintervalle", detail:"Suche Anstieg mit 4–6% Steigung. 5 × 4 Min bergauf Zone 3–4. Bergab locker.", badge:"5 × 4 Min", bg:"#deedfb", bc:"#185FA5"},
+            ]
+          },
+          {
+            title:"Ausfahren",
+            exercises:[
+              {icon:"🚴", name:"Locker ausfahren", detail:"10 Min Zone 1, Kadenz hoch halten – Laktat abbauen", badge:"10 Min", bg:"#deedfb", bc:"#185FA5"},
+            ]
+          }
+        ],
+        info:{col:"#185FA5", text:"Intervalle sind der schnellste Weg, die Schwelle anzuheben. Aber: max. 1 Intervalleinheit / Woche in Phase 2. Der Rest bleibt Zone 2."}
+      },
+      {
+        name:"Freitag", short:"Fr", type:"regen",
+        title:"Aktive Erholung / Mobilität",
+        duration:"20–30 Min",
+        badge:{bg:"#f0ede6", col:"#6a6860", label:"Regeneration"},
+        sections:[{
+          title:"Leichte Aktivität",
+          exercises:[
+            {icon:"🚶", name:"Spaziergang oder sehr lockeres Radeln", detail:"Unter 30 Min, HF unter 110 bpm – kein Training, nur Durchblutung", badge:"20–30 Min", bg:"#f0ede6", bc:"#9a9890"},
+            {icon:"🧘", name:"Rücken-Fokus Dehnung", detail:"Cat-Cow, Child's Pose, Hüftbeuger-Stretch – täglich wichtig bei Rückenproblemen", badge:"10 Min", bg:"#f0ede6", bc:"#9a9890"},
+          ]
+        }],
+        info:{col:"#9a9890", text:"Freitag ist Puffer. Wenn du die Woche sehr anstrengend war, heute komplett ausruhen."}
+      },
+      {
+        name:"Samstag", short:"Sa", type:"lauf",
+        title:"Langer Lauf (progressiv aufbauend)",
+        duration:"60–120 Min",
+        badge:{bg:"#dff5ec", col:"#0a5a44", label:"Laufen"},
+        sections:[
+          {
+            title:"Langer Lauf – Herzstück von Phase 2",
+            exercises:[
+              {icon:"🏃", name:"Monat 7–8: 60–70 Min Zone 2", detail:"Distanz: 10–12 km. Erster echter Langstreckenlauf. Tempo: 6:00–7:00 / km. Gel/Wasser mitnehmen!", badge:"60–70 Min", bg:"#dff5ec", bc:"#1D9E75"},
+              {icon:"🏃", name:"Monat 9–10: 75–90 Min Zone 2", detail:"Distanz: 13–15 km. Halbmarathon-Vorbereitung beginnt. Ernährungsstrategie testen.", badge:"75–90 Min", bg:"#dff5ec", bc:"#1D9E75"},
+              {icon:"🏃", name:"Monat 11–12: 90–110 Min Zone 2", detail:"Distanz: 15–18 km. Längster Lauf bisher. Letzten 10–15 Min etwas zulegen – Marathon-Pace üben.", badge:"90–110 Min", bg:"#dff5ec", bc:"#1D9E75"},
+            ]
+          },
+          {
+            title:"Regel: +10% / Woche, jede 4. Woche –30%",
+            exercises:[
+              {icon:"📊", name:"Beispiel-Progression (Distanz)", detail:"Wo 1: 12 km → Wo 2: 13 km → Wo 3: 14 km → Wo 4 (Regen): 10 km → Wo 5: 15 km …", badge:"Regel", bg:"#dff5ec", bc:"#1D9E75"},
+            ]
+          }
+        ],
+        info:{col:"#1D9E75", text:"Der lange Lauf ist die wichtigste Einheit für den Marathon. Verlangsamung zum Ende = zu schnell gestartet. Ziel: gleichmäßiges Tempo von Minute 1 bis Minute 90."}
+      },
+      {
+        name:"Sonntag", short:"So", type:"rad",
+        title:"Lange Radausfahrt",
+        duration:"90–180 Min",
+        badge:{bg:"#deedfb", col:"#154e8a", label:"Radfahren"},
+        sections:[
+          {
+            title:"Lange Ausdauerfahrt – Ötztal-Grundlage",
+            exercises:[
+              {icon:"🚴", name:"Monat 7–8: 80–100 km Zone 2", detail:"Flach bis leicht hügelig. Kadenz 85–90 rpm. Ernährung: alle 45 Min Gel/Riegel. 1 Trinkflasche / Stunde.", badge:"2,5–3 h", bg:"#deedfb", bc:"#185FA5"},
+              {icon:"🚴", name:"Monat 9–10: 100–130 km mit ersten Bergen", detail:"Anstiege mit 300–500 Hm einbauen. HF bei Anstiegen auf Zone 3 erlaubt. Regeneration im Flachen.", badge:"3–4 h", bg:"#deedfb", bc:"#185FA5"},
+              {icon:"🚴", name:"Monat 11–12: 130–160 km, 800–1200 Hm", detail:"Erste ernsthafte Bergausfahrten. Ötztaler-Strecke analysieren, Pässe simulieren (z.B. Kühtai-Anstieg)", badge:"4–5 h", bg:"#deedfb", bc:"#185FA5"},
+            ]
+          },
+          {
+            title:"Ernährung auf dem Rad (kritisch!)",
+            exercises:[
+              {icon:"🍌", name:"Ernährungsstrategie Long Ride", detail:"Stunde 1: 60g Kohlenhydrate/h (Gel + Riegel). Stunde 2+: 80–90g KH/h. Salztabletten ab 2h. Nie ohne Essen fahren!", badge:"Pflicht", bg:"#deedfb", bc:"#185FA5"},
+            ]
+          }
+        ],
+        info:{col:"#185FA5", text:"Lange Radausfahrten bauen die aerobe Basis für den Ötztaler. 5.500 Höhenmeter an einem Tag sind nur möglich, wenn du 4–5h-Ausfahrten ohne Einbruch überlebst."}
+      },
+    ]
+  },
+
+  // ══════════════════════════════════════════════
+  // PHASE 3 – ENTWICKLUNG (Monat 13–18)
+  // ══════════════════════════════════════════════
+  {
+    id:2, label:"Phase 3", sub:"Entwicklung", months:"Monat 13–18", col:"#BA7517",
+    chips:[
+      {l:"Laufen / Wo", v:"50–70 km"},
+      {l:"Rad / Wo", v:"200–300 km"},
+      {l:"Höhenmeter", v:"2.000+ / Wo"},
+      {l:"HF-Ziel", v:"Z2 + Z3/Z4"},
+    ],
+    days:[
+      {name:"Montag",short:"Mo",type:"regen",title:"Ruhe / Dehnung",duration:"30 Min",badge:{bg:"#f0ede6",col:"#6a6860",label:"Regeneration"},
+        sections:[{title:"Regeneration",exercises:[
+          {icon:"😴",name:"Komplett-Ruhe oder Spaziergang",detail:"Hohes Trainingsvolumen ab jetzt – Montag bleibt heilig frei",badge:"—",bg:"#f0ede6",bc:"#9a9890"},
+          {icon:"🧘",name:"Pflicht-Dehnung: Hüftbeuger + Hamstrings",detail:"Je 2 × 90 Sek. – verhindert Rückenprobleme bei hohem Laufvolumen",badge:"15 Min",bg:"#f0ede6",bc:"#9a9890"},
+        ]}],info:{col:"#9a9890",text:"Woche für Woche setzt jetzt hohe Belastung an. Montag ist dein Schutzpuffer."}},
+      {
+        name:"Dienstag", short:"Di", type:"lauf",
+        title:"Tempo-Lauf / Schwellentraining",
+        duration:"55–70 Min",
+        badge:{bg:"#dff5ec", col:"#0a5a44", label:"Laufen"},
+        sections:[
+          {title:"Aufwärmen",exercises:[
+            {icon:"🏃",name:"15 Min lockeres Einlaufen",detail:"Zone 1–2, Lauf-ABC, dynamisches Dehnen",badge:"15 Min",bg:"#dff5ec",bc:"#1D9E75"},
+          ]},
+          {title:"Tempo-Block (Schwelle = Zone 3–4)",exercises:[
+            {icon:"⚡",name:"Monat 13–14: 4 × 8 Min Tempo",detail:"Pace: ~5:00–5:20 / km (Zone 3, 143–157 bpm). 3 Min Trabpause. Erstes echtes Tempotraining.",badge:"4 × 8 Min",bg:"#dff5ec",bc:"#1D9E75"},
+            {icon:"⚡",name:"Monat 15–16: 3 × 12 Min Schwelle",detail:"Unbequem aber kontrolliert. Pace ~4:50–5:10 / km. 4 Min Pause.",badge:"3 × 12 Min",bg:"#dff5ec",bc:"#1D9E75"},
+            {icon:"⚡",name:"Monat 17–18: 2 × 20 Min Marathon-Pace",detail:"Ziel-Marathon-Pace üben. HF: 155–165 bpm. 5 Min Pause. Mental sehr fordernd.",badge:"2 × 20 Min",bg:"#dff5ec",bc:"#1D9E75"},
+          ]},
+          {title:"Auslaufen",exercises:[
+            {icon:"🏃",name:"10 Min sehr locker auslaufen",detail:"Pflicht – kein abruptes Stoppen nach Tempoarbeit",badge:"10 Min",bg:"#dff5ec",bc:"#1D9E75"},
+          ]},
+        ],
+        info:{col:"#1D9E75", text:"Halbmarathon-Test: In Monat 15 einen offiziellen Halbmarathon als Rennen laufen. Zeigt aktuellen Leistungsstand und gibt ersten Wettkampf-Erfahrung."}
+      },
+      {
+        name:"Mittwoch", short:"Mi", type:"kraft",
+        title:"Kraft – Erhaltung + Explosivkraft",
+        duration:"45–50 Min",
+        badge:{bg:"#faecd8", col:"#7a4609", label:"Kraft / Rumpf"},
+        sections:[
+          {title:"Kraft (Volumen reduziert, Qualität erhöht)",exercises:[
+            {icon:"🏋️",name:"Romanian Deadlift",detail:"Schwerer als Phase 2. 4–5 Sätze, 6 Wiederholungen. Stärkt Ischiokrurale + Rücken.",badge:"4 × 6",bg:"#faecd8",bc:"#BA7517"},
+            {icon:"🏋️",name:"Hip Thrust (schwer)",detail:"Maximale Gesäßaktivierung. Kurze Pause oben. Transferiert direkt in Berganfahrten.",badge:"4 × 8",bg:"#faecd8",bc:"#BA7517"},
+            {icon:"🏋️",name:"Single-Leg Romanian Deadlift",detail:"Balance + hintere Kette. Verletzungsprävention für Läufer.",badge:"3 × 8",bg:"#faecd8",bc:"#BA7517"},
+          ]},
+          {title:"Explosivkraft (neu in Phase 3)",exercises:[
+            {icon:"🔥",name:"Box Jump",detail:"Weiche Landung, volle Hüftstreckung oben. Start: 40 cm Box. Knie zeigen nach vorne.",badge:"4 × 5",bg:"#faecd8",bc:"#BA7517"},
+            {icon:"🔥",name:"Broad Jump (Weitsprung)",detail:"Beidbeinig springen, weit wie möglich. Kraft + Koordination.",badge:"4 × 5",bg:"#faecd8",bc:"#BA7517"},
+          ]},
+          {title:"Rumpf-Abschluss (10 Min)",exercises:[
+            {icon:"🧱",name:"Pallof Press + Dead Bug + Side Plank",detail:"Rumpf-Trifecta: Anti-Rotation, Anti-Extension, Lateral Stability",badge:"Je 3 × 10",bg:"#faecd8",bc:"#BA7517"},
+          ]},
+        ],
+        info:{col:"#BA7517", text:"Kraft wird ab Phase 3 auf Erhaltung reduziert (2× → 1× / Woche ab Monat 17). Explosivkraft verbessert Laufökonomie und Antritt beim Berg."}
+      },
+      {
+        name:"Donnerstag", short:"Do", type:"rad",
+        title:"Bergtraining / Hügelwiederholungen",
+        duration:"75–100 Min",
+        badge:{bg:"#deedfb", col:"#154e8a", label:"Radfahren"},
+        sections:[
+          {title:"Einfahren",exercises:[
+            {icon:"🚴",name:"15 Min einfahren",detail:"Zone 1–2, ganz locker. Beine aufwärmen.",badge:"15 Min",bg:"#deedfb",bc:"#185FA5"},
+          ]},
+          {title:"Bergintervalle – Ötztal-Spezifisch",exercises:[
+            {icon:"⛰️",name:"Monat 13–14: 6 × 5 Min bergauf",detail:"Zone 3–4 (143–172 bpm). Kadenz bergauf: 60–70 rpm. Bergab locker erholen. Steigung 5–8%",badge:"6 × 5 Min",bg:"#deedfb",bc:"#185FA5"},
+            {icon:"⛰️",name:"Monat 15–16: 4 × 12 Min bergauf",detail:"Simuliert Pässe. Pace gleichmäßig halten, nicht zu schnell starten. HF Zone 3.",badge:"4 × 12 Min",bg:"#deedfb",bc:"#185FA5"},
+            {icon:"⛰️",name:"Monat 17–18: Kompletter Passanstieg",detail:"Einen echten langen Anstieg (z.B. 500–800 Hm) von unten nach oben. Pacing üben.",badge:"1 × komplett",bg:"#deedfb",bc:"#185FA5"},
+          ]},
+        ],
+        info:{col:"#185FA5", text:"Berganstieg-Pacing ist die wichtigste Ötztal-Fähigkeit. Zu schnell gestartet = Einbruch nach 3h. Ziel: gleichmäßige Wattzahl/HF von unten bis oben."}
+      },
+      {
+        name:"Freitag", short:"Fr", type:"regen",
+        title:"Aktive Erholung",
+        duration:"20 Min",
+        badge:{bg:"#f0ede6",col:"#6a6860",label:"Regeneration"},
+        sections:[{title:"Locker",exercises:[
+          {icon:"🚶",name:"Spaziergang oder 20 Min lockeres Rad",detail:"HF unter 110 bpm. Kein Druck.",badge:"20 Min",bg:"#f0ede6",bc:"#9a9890"},
+        ]}],
+        info:{col:"#9a9890",text:"Körper für Samstag (langer Lauf) und Sonntag (Bergausfahrt) frisch halten."}
+      },
+      {
+        name:"Samstag", short:"Sa", type:"lauf",
+        title:"Langer Lauf (Pre-Marathon Vorbereitung)",
+        duration:"100–150 Min",
+        badge:{bg:"#dff5ec",col:"#0a5a44",label:"Laufen"},
+        sections:[
+          {title:"Langer Lauf mit Progression",exercises:[
+            {icon:"🏃",name:"Monat 13–14: 18–22 km",detail:"Zone 2. Letzten 3 km auf Marathon-Pace. Gel alle 40 Min testen.",badge:"90–100 Min",bg:"#dff5ec",bc:"#1D9E75"},
+            {icon:"🏃",name:"Monat 15–16: 23–27 km",detail:"Längste Läufe bisher. Ernährung & Ausrüstung wie am Renntag. Keine Experimente.",badge:"110–130 Min",bg:"#dff5ec",bc:"#1D9E75"},
+            {icon:"🏃",name:"Monat 17–18: 28–32 km (letzter langer Lauf)",detail:"3–4 Wochen vor Marathon. Danach beginnt Tapering. Wichtigste Einheit der gesamten Vorbereitung.",badge:"130–150 Min",bg:"#dff5ec",bc:"#1D9E75"},
+          ]},
+        ],
+        info:{col:"#1D9E75", text:"32 km ist genug – mehr schadet. Der Marathon-Körper wird nicht im Training gebaut, sondern in der Regeneration danach."}
+      },
+      {
+        name:"Sonntag", short:"So", type:"rad",
+        title:"Bergausfahrt (Ötztal-Simulation)",
+        duration:"180–270 Min",
+        badge:{bg:"#deedfb",col:"#154e8a",label:"Radfahren"},
+        sections:[
+          {title:"Lange Bergausfahrt",exercises:[
+            {icon:"🚴",name:"Monat 13–14: 120–150 km, 1500–2000 Hm",detail:"2–3 Pässe / längere Anstiege. Ernährungsplan einhalten. Schnitt ~22 km/h erwartet.",badge:"3,5–4,5 h",bg:"#deedfb",bc:"#185FA5"},
+            {icon:"🚴",name:"Monat 15–16: 160–200 km, 2500–3500 Hm",detail:"Ötztal-ähnliche Belastung. Kursvergleich: Ötztal hat 240 km / 5500 Hm. Du bist bei 65–75%.",badge:"4,5–6 h",bg:"#deedfb",bc:"#185FA5"},
+            {icon:"🚴",name:"Monat 17–18: 200+ km oder Ötztal-Strecke fahren",detail:"Wenn möglich: Timmelsjoch oder Kühtai echte Rekognoszierung. Psychologisch enorm wertvoll.",badge:"6+ h",bg:"#deedfb",bc:"#185FA5"},
+          ]},
+        ],
+        info:{col:"#185FA5", text:"Ernährung auf langen Ausfahrten: 80–90g Kohlenhydrate / Stunde. Das trainiert auch den Darm. Am Ötztal-Renntag wirst du 8–10h auf dem Rad sitzen."}
+      },
+    ]
+  },
+
+  // ══════════════════════════════════════════════
+  // PHASE 4 – PEAK & WETTKAMPF (Monat 19–24)
+  // ══════════════════════════════════════════════
+  {
+    id:3, label:"Phase 4", sub:"Peak & Rennen", months:"Monat 19–24", col:"#993C1D",
+    chips:[
+      {l:"Marathon-Ziel", v:"Finisher"},
+      {l:"Ötztal", v:"240 km / 5.500 Hm"},
+      {l:"Tapering", v:"3–4 Wochen"},
+      {l:"Kraft", v:"Erhaltung 1×/Wo"},
+    ],
+    days:[
+      {name:"Montag",short:"Mo",type:"regen",title:"Komplett-Ruhe / Schlaf",duration:"—",badge:{bg:"#f0ede6",col:"#6a6860",label:"Regeneration"},
+        sections:[{title:"Peak-Phase Prioritäten",exercises:[
+          {icon:"😴",name:"8–9 Stunden Schlaf",detail:"Hormoneller Höhepunkt: Testosteron, Wachstumshormon, Cortisol – alles läuft über Schlaf",badge:"Priorität 1",bg:"#f0ede6",bc:"#9a9890"},
+          {icon:"💧",name:"2,5–3 L Wasser",detail:"Plasma-Volumen steigt durch Ausdauertraining – Hydration ist jetzt noch wichtiger",badge:"Pflicht",bg:"#f0ede6",bc:"#9a9890"},
+        ]}],info:{col:"#9a9890",text:"In Phase 4 wird trainierst du nicht mehr 'fitter' – du konsolidierst. Erholung ist die Leistung."}},
+      {
+        name:"Dienstag", short:"Di", type:"lauf",
+        title:"Qualitätslauf – Marathon-spezifisch",
+        duration:"60–75 Min",
+        badge:{bg:"#dff5ec",col:"#0a5a44",label:"Laufen"},
+        sections:[
+          {title:"Einlaufen",exercises:[
+            {icon:"🏃",name:"15 Min Zone 1–2",detail:"Sehr locker, Beine wecken",badge:"15 Min",bg:"#dff5ec",bc:"#1D9E75"},
+          ]},
+          {title:"Marathon-Pace Arbeit",exercises:[
+            {icon:"⚡",name:"Monat 19–20: 3 × 15 Min Marathon-Pace",detail:"Ziel-Pace für den Marathon halten. 5 Min Pause. HF: 158–168 bpm.",badge:"3 × 15 Min",bg:"#dff5ec",bc:"#1D9E75"},
+            {icon:"⚡",name:"Monat 21–22: 2 × 25 Min Marathon-Pace",detail:"Mentale Stärke aufbauen. Das WIRD unbequem. Genau richtig.",badge:"2 × 25 Min",bg:"#dff5ec",bc:"#1D9E75"},
+            {icon:"⚡",name:"Tapering (Monat 23–24): Volumen –40 %",detail:"Kürzere, schnelle Einheiten. 4 × 5 Min Pace + viel Erholung. Beine frisch halten.",badge:"4 × 5 Min",bg:"#dff5ec",bc:"#1D9E75"},
+          ]},
+          {title:"Auslaufen",exercises:[
+            {icon:"🏃",name:"10 Min locker",detail:"Immer. Ohne Ausnahme.",badge:"10 Min",bg:"#dff5ec",bc:"#1D9E75"},
+          ]},
+        ],
+        info:{col:"#1D9E75", text:"Marathon Race-Day Plan: Erste 10 km 10–15 Sek./km langsamer als Ziel-Pace. Hälfte: Entscheidung ob Pace halten. Ab km 35: alles geben."}
+      },
+      {
+        name:"Mittwoch", short:"Mi", type:"regen",
+        title:"Sehr lockeres Rad (Beine locker halten)",
+        duration:"45–60 Min",
+        badge:{bg:"#deedfb",col:"#154e8a",label:"Radfahren"},
+        sections:[{title:"Aktive Erholung auf dem Rad",exercises:[
+          {icon:"🚴",name:"45–60 Min Zone 1, sehr flach",detail:"HF unter 125 bpm. Kadenz hoch (90+ rpm). Kein Ehrgeiz. Beine für Donnerstag frisch halten.",badge:"45–60 Min",bg:"#deedfb",bc:"#185FA5"},
+        ]}],
+        info:{col:"#185FA5",text:"Mittwoch ist kein echter Radtag – es ist aktive Regeneration mit dem Rad als Mittel."}
+      },
+      {
+        name:"Donnerstag", short:"Do", type:"lauf",
+        title:"Lauf Zone 3 – Schwellen-Erhaltung",
+        duration:"50–60 Min",
+        badge:{bg:"#dff5ec",col:"#0a5a44",label:"Laufen"},
+        sections:[
+          {title:"Schwellen-Erhaltung",exercises:[
+            {icon:"🏃",name:"10 Min einlaufen",detail:"Zone 1–2",badge:"10 Min",bg:"#dff5ec",bc:"#1D9E75"},
+            {icon:"⚡",name:"20–30 Min Zone 3 (143–157 bpm)",detail:"Konstantes Tempo. Nicht in Zone 4 abdriften. Dieses Training erhält die aufgebaute Schwelle.",badge:"20–30 Min",bg:"#dff5ec",bc:"#1D9E75"},
+            {icon:"🏃",name:"10 Min auslaufen",detail:"Zone 1",badge:"10 Min",bg:"#dff5ec",bc:"#1D9E75"},
+          ]},
+        ],
+        info:{col:"#1D9E75",text:"2 Lauftage / Woche in Phase 4 – einer schnell (Di), einer mittel (Do). Das ist die Marathon-Formel."}
+      },
+      {
+        name:"Freitag", short:"Fr", type:"regen",
+        title:"Ruhe / Dehnen",
+        duration:"20 Min",
+        badge:{bg:"#f0ede6",col:"#6a6860",label:"Regeneration"},
+        sections:[{title:"Pflicht-Routine vor dem Wochenende",exercises:[
+          {icon:"🧘",name:"10 Min Dehnen: Hüftbeuger, Waden, Hamstrings",detail:"Freitag-Abend – Körper auf Samstag vorbereiten",badge:"10 Min",bg:"#f0ede6",bc:"#9a9890"},
+          {icon:"🍽️",name:"Carb-Loading beginnen (vor Wettkämpfen)",detail:"72 h vor Marathon: 8–10g KH / kg Körpergewicht / Tag. Pasta, Reis, Brot.",badge:"Renntag –3",bg:"#f0ede6",bc:"#9a9890"},
+        ]}],
+        info:{col:"#9a9890",text:"Carb-Loading ist Wissenschaft: Muskeln werden zu Glykogentanks. 3 Tage vorher beginnen, nicht erst am Abend davor."}
+      },
+      {
+        name:"Samstag", short:"Sa", type:"rad",
+        title:"Wettkampfsimulation / Generalprobe",
+        duration:"240–360 Min",
+        badge:{bg:"#deedfb",col:"#154e8a",label:"Radfahren"},
+        sections:[
+          {title:"Ötztal-Generalprobe (4 Wochen vor dem Rennen)",exercises:[
+            {icon:"🚴",name:"200+ km mit 4.000+ Hm",detail:"So nah wie möglich am Renntag. Selbes Rad, selbe Ausrüstung, selbe Ernährung. Zeigt wo Schwachstellen sind.",badge:"6–8 h",bg:"#deedfb",bc:"#185FA5"},
+            {icon:"🚴",name:"Marathon-Tapering: 80–100 km locker",detail:"3 Wochen vor Marathon: letzter langer Rad-Tag. Dann Volumen stark reduzieren.",badge:"3–4 h",bg:"#deedfb",bc:"#185FA5"},
+          ]},
+          {title:"Race-Day Checkliste (2 Wochen vor dem Rennen üben)",exercises:[
+            {icon:"✅",name:"Ausrüstung final testen",detail:"Trikot, Helm, Schuhe, Pedale, Garmin-Einstellungen, Ersatzschlauch",badge:"Check",bg:"#deedfb",bc:"#185FA5"},
+            {icon:"✅",name:"Ernährungs-Plan final fixieren",detail:"Wann welches Gel, wann Wasser, wann Riegel. Aufs Oberrohr kleben.",badge:"Plan",bg:"#deedfb",bc:"#185FA5"},
+          ]},
+        ],
+        info:{col:"#185FA5", text:"Die Generalprobe zeigt alles: Sitzposition nach 5h, Magenprobleme, Pacing-Fehler. Besser jetzt entdecken als am Renntag."}
+      },
+      {
+        name:"Sonntag", short:"So", type:"regen",
+        title:"Regeneration & mentale Vorbereitung",
+        duration:"—",
+        badge:{bg:"#f0ede6",col:"#6a6860",label:"Regeneration"},
+        sections:[{title:"Peak & Taper Woche",exercises:[
+          {icon:"😴",name:"Schlafen & Erholen",detail:"Nach der Generalprobe: Sonntag komplett frei. Körper braucht 48–72h für volle Erholung.",badge:"Pflicht",bg:"#f0ede6",bc:"#9a9890"},
+          {icon:"🧠",name:"Mentales Training / Visualisierung",detail:"Rennstrecke im Kopf fahren. Kritische Momente (km 30 beim Marathon, Timmelsjoch) mental vorwegnehmen.",badge:"Optional",bg:"#f0ede6",bc:"#9a9890"},
+          {icon:"🏆",name:"HRV-Monitoring (wenn Smartwatch unterstützt)",detail:"Niedrige HRV = mehr Erholung nötig. Hohe HRV = bereit für Belastung. Über Wochen beobachten.",badge:"Empfohlen",bg:"#f0ede6",bc:"#9a9890"},
+        ]}],
+        info:{col:"#9a9890",text:"Taper-Angst ist real: du wirst dich 2 Wochen vor dem Rennen müde und langsam fühlen. Das ist normal – der Körper lädt auf. Vertraue dem Prozess."}
+      },
+    ]
+  }
+];
+
+// ─── STATE ────────────────────────────────────────────────────────────────
+let curPhase = 0;
+let curDay   = 0;
+
+// ─── RENDER ───────────────────────────────────────────────────────────────
+function renderPhases() {
+  document.getElementById('phaseRow').innerHTML = phases.map((p,i) => `
+    <div class="ppill ${i===curPhase?'active':''}"
+      style="${i===curPhase?'background:'+p.col+';border-color:'+p.col:''}"
+      onclick="selectPhase(${i})">${p.label} – ${p.sub}</div>`).join('');
+}
+
+function renderDayTabs() {
+  const p = phases[curPhase];
+  document.getElementById('dayTabs').innerHTML = p.days.map((d,i) => `
+    <div class="dtab t-${d.type} ${i===curDay?'active':''}" onclick="selectDay(${i})">${d.short}</div>`
+  ).join('');
+}
+
+function renderDay() {
+  const p  = phases[curPhase];
+  const d  = p.days[curDay];
+  const tc = {lauf:"#dff5ec",rad:"#deedfb",kraft:"#faecd8",regen:"#f0ede6",kombi:"#fbe8f0"};
+
+  // chips
+  const chipsHtml = p.chips.map(c=>`<div class="chip">${c.l}: <span>${c.v}</span></div>`).join('');
+
+  // sections
+  const sectionsHtml = d.sections.map(s => `
+    <div class="section">
+      <div class="section-title">${s.title}</div>
+      <div class="ex-list">
+        ${s.exercises.map(e => `
+          <div class="ex">
+            <div class="ex-icon">${e.icon}</div>
+            <div class="ex-body">
+              <div class="ex-name">${e.name}</div>
+              <div class="ex-detail">${e.detail}</div>
+            </div>
+            <div class="ex-badge" style="background:${e.bg};color:${e.bc}">${e.badge}</div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  document.getElementById('dayContent').innerHTML = `
+    <div class="card">
+      <div class="chips">${chipsHtml}</div>
+      <div class="day-header">
+        <div class="day-badge" style="background:${d.badge.bg};color:${d.badge.col}">${d.badge.label}</div>
+        <div class="day-duration">${d.duration}</div>
+      </div>
+      <div class="day-title">${d.title}</div>
+    </div>
+    <div class="card">
+      ${sectionsHtml}
+      <div class="info-box" style="--accent:${p.col}">${d.info.text}</div>
+    </div>
+  `;
+}
+
+function selectPhase(i) { curPhase=i; curDay=0; renderPhases(); renderDayTabs(); renderDay(); }
+function selectDay(i)   { curDay=i; renderDayTabs(); renderDay(); }
+
+renderPhases();
+renderDayTabs();
+renderDay();
+</script>
+</body>
+</html>
